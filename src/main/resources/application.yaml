@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: uniclub
+  datasource:
+    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3307}/${MYSQL_DATABASE:uniclub}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_ROOT_PASSWORD:Hit@My5QL}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+cybersoft:
+  username: admin
+  password: admin
+
+jwt:
+  secret: OWE0ZjJjOGQzYjdhMWU2ZjQ1YzhhMGIzZjI2N2Q4YjFkNGU2ZjNjOGE5ZDJiNWY4ZTNhOWM4YjVmNnY4YTNkOQ==
+  expiration: 86400
+
+upload:
+  path: D:\Practice\Java\uniclub\images123
+
+custom:
+  redis:
+    host: ${REDIS_URL:localhost}
+    port: ${REDIS_PORT:6380}
+    password: ${REDIS_PASSWORD:null}
