@@ -28,38 +28,38 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public void insertProduct(InsertProductionRequest file) {
-        try {
-            fileService.uploadFile(file);
-
-            ProductEntity product = new ProductEntity();
-            product.setName(file.getName());
-            product.setPrice(file.getPrice());
-
-            BrandEntity brand = new BrandEntity();
-            brand.setId(file.getBrandId());
-            product.setBrand(brand);
-
-            product = productRepository.save(product);
-
-            VariantEntity variant = new VariantEntity();
-            variant.setProduct(product);
-
-            ColorEntity color = new ColorEntity();
-            color.setId(file.getColorId());
-            variant.setColor(color);
-
-            SizeEntity size = new SizeEntity();
-            size.setId(file.getSizeId());
-            variant.setSize(size);
-
-            variant.setImages(file.getFile().getOriginalFilename());
-            variant.setQuantity(file.getQuantity());
-            variant.setPrice(file.getPrice());
-            variantRepository.save(variant);
-
-        } catch (Exception e) {
-            throw new InsertException("[insertProduct] Cannot insert product");
-        }
+//        try {
+//            fileService.uploadFile(file);
+//
+//            ProductEntity product = new ProductEntity();
+//            product.setName(file.getName());
+//            product.setPrice(file.getPrice());
+//
+//            BrandEntity brand = new BrandEntity();
+//            brand.setId(file.getBrandId());
+//            product.setBrand(brand);
+//
+//            product = productRepository.save(product);
+//
+//            VariantEntity variant = new VariantEntity();
+//            variant.setProduct(product);
+//
+//            ColorEntity color = new ColorEntity();
+//            color.setId(file.getColorId());
+//            variant.setColor(color);
+//
+//            SizeEntity size = new SizeEntity();
+//            size.setId(file.getSizeId());
+//            variant.setSize(size);
+//
+//            variant.setImages(file.getFile().getOriginalFilename());
+//            variant.setQuantity(file.getQuantity());
+//            variant.setPrice(file.getPrice());
+//            variantRepository.save(variant);
+//
+//        } catch (Exception e) {
+//            throw new InsertException("[insertProduct] Cannot insert product");
+//        }
     }
 
     @Override
@@ -70,12 +70,12 @@ public class ProductServiceImp implements ProductService {
         return productRepository.findAll(page).stream().map(product -> {
             ProductDto productDto = new ProductDto();
             productDto.setId(product.getId());
-            productDto.setName(product.getName());
+            productDto.setName(product.getProductEntity().getName());
             productDto.setPrice(product.getPrice());
-            if (!product.getVariants().isEmpty()) {
-                productDto.setImage("http://localhost:8080/download/" + product.getVariants().get(0).getImages());
+            if (!product.getImageEntityList().isEmpty()) {
+                productDto.setUrlName("http://localhost:8080/download/" + product.getImageEntityList().get(0).getUrlName());
             } else {
-                productDto.setImage("");
+                productDto.setUrlName("");
             }
             return productDto;
         }).toList();

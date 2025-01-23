@@ -17,23 +17,12 @@ public class ProductEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "note")
     private String description;
 
-    @Column(name = "price")
-    private double price;
+    @Column(name = "rate")
+    private double rate;
 
-    @Column(name = "information")
-    private String information;
-
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
-    @ManyToOne
-    @JoinColumn(name = "id_brand")
-    private BrandEntity brand;
-
-    @OneToMany(mappedBy = "product")
-    @JsonIgnore
-    private List<VariantEntity> variants;
+    @OneToMany(mappedBy = "productEntity")
+    private List<ProductDetailEntity> detailEntityList;
 }
