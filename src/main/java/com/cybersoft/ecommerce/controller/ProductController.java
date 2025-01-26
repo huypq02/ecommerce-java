@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/collection")
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -20,6 +20,7 @@ public class ProductController {
 
     @GetMapping()
     public ResponseEntity<?> getAllProduct(@RequestParam int pageSize, @RequestParam int pageNumber){
+
         return ResponseEntity.ok(productService.getAllProduct(pageSize, pageNumber));
     }
 }
