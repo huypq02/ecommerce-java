@@ -2,12 +2,12 @@ spring:
   application:
     name: uniclub
   datasource:
-    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3307}/${MYSQL_DATABASE:uniclub}
+    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3307}/${MYSQL_DATABASE:ecommerce}
     username: ${MYSQL_USERNAME:root}
-    password: ${MYSQL_ROOT_PASSWORD:Hit@My5QL}
+    password: ${MYSQL_ROOT_PASSWORD:admin123}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
 
 cybersoft:

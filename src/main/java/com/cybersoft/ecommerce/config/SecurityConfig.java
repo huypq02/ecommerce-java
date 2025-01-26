@@ -29,7 +29,8 @@ public class SecurityConfig {
                 .sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
                     // giúp định nghĩa quyền truy cập cho các link
-                    request.requestMatchers("/login", "/register", "/product", "/download/**", "/category").permitAll();
+                    request.requestMatchers("/login", "/register", "/product",
+                            "/download/**", "/category","/collection").permitAll();
                     request.anyRequest().authenticated();
                 })
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

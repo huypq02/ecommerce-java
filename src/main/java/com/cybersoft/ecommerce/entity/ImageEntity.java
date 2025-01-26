@@ -12,10 +12,10 @@ public class ImageEntity {
     @Column(name = "url")
     private String urlName;
     @Column(name = "all_text")
-    private String all_text;
+    private String allText;
 
     @ManyToOne
-    @JoinColumn(name = "product_detai_id")
+    @JoinColumn(name = "product_detail_id")
     private ProductDetailEntity productDetailEntity;
 
 

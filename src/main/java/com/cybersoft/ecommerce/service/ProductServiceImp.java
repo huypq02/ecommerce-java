@@ -64,13 +64,16 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public List<ProductDto> getAllProduct(int pageSize, int pageNumber) {
-
         Pageable page = PageRequest.of(pageNumber, pageSize);
-
         return productRepository.findAll(page).stream().map(product -> {
             ProductDto productDto = new ProductDto();
             productDto.setId(product.getId());
+            productDto.setNote(product.getProductEntity().getNote());
             productDto.setName(product.getProductEntity().getName());
+            productDto.setRate(product.getProductEntity().getRate());
+            productDto.setColor(product.getColor());
+            productDto.setSize(product.getSize());
+            productDto.setQuantity(product.getQuantity_stock());
             productDto.setPrice(product.getPrice());
             if (!product.getImageEntityList().isEmpty()) {
                 productDto.setUrlName("http://localhost:8080/download/" + product.getImageEntityList().get(0).getUrlName());
