@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,7 +23,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -34,8 +34,22 @@ public class SecurityConfig {
                 .sessionManagement(ss -> ss.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
                     // giúp định nghĩa quyền truy cập cho các link
-                    request.requestMatchers("/login", "/register", "/product", "/download/**", "/category").permitAll();
+                    request.requestMatchers("/login", "/register", "/download/**").permitAll();
                     request.requestMatchers("/user/auth/social", "/user/auth/social/callback").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/product").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/category").permitAll();
+
+                    request.requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.PUT, "/product").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.DELETE, "/product").hasRole("ADMIN");
+
+                    request.requestMatchers(HttpMethod.POST, "/category").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.PUT, "/category").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.DELETE, "/category").hasRole("ADMIN");
+
+                    request.requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.DELETE, "/users").hasRole("ADMIN");
+
                     request.anyRequest().authenticated();
                 })
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

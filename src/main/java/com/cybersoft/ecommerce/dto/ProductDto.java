@@ -6,14 +6,6 @@ import lombok.Data;
 public class ProductDto {
     private int id;
     private String name;
-    private String description;
-    private double price;
-    private String information;
-    private String createDate;
-    private int brandId;
-    private String brandName;
-    private int quantity;
-    private String color;
-    private String size;
-    private String image;
+    private String note;
+    private double rate;
 }
