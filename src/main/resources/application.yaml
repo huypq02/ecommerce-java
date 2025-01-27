@@ -1,14 +1,28 @@
 spring:
   application:
-    name: uniclub
+    name: ecommerce
   datasource:
-    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3307}/${MYSQL_DATABASE:uniclub}
+    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:ecommerce}
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_ROOT_PASSWORD:Hit@My5QL}
   jpa:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQLDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: "${FACEBOOK_CLIENT_ID}"
+            client-secret: "${FACEBOOK_CLIENT_SECRET}"
+            redirect-uri: "${FACEBOOK_REDIRECT_URI:http://localhost:8080/user/auth/social/callback}"
+            auth-uri: "https://www.facebook.com/v11.0/dialog/oauth"
+            token-uri: "https://graph.facebook.com/v11.0/oauth/access_token"
+            user-info-uri: "https://graph.facebook.com/me?fields=id,name,email,picture.type(large)"
+            scope:
+              - email
+              - public_profile
 
 cybersoft:
   username: admin
@@ -19,7 +33,7 @@ jwt:
   expiration: 86400
 
 upload:
-  path: D:\Practice\Java\uniclub\images123
+  path: D:\Practice\Java\ecommerce\images123
 
 custom:
   redis:
