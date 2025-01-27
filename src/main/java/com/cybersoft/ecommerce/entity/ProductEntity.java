@@ -17,21 +17,11 @@ public class ProductEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "note")
+    private String note;
 
-    @Column(name = "price")
-    private double price;
-
-    @Column(name = "information")
-    private String information;
-
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
-    @ManyToOne
-    @JoinColumn(name = "id_brand")
-    private BrandEntity brand;
+    @Column(name = "rate")
+    private double rate;
 
     @OneToMany(mappedBy = "product")
     @JsonIgnore
