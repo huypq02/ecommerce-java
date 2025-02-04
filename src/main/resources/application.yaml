@@ -1,8 +1,8 @@
 spring:
   application:
-    name: uniclub
+    name: ecommerce
   datasource:
-    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3308}/${MYSQL_DATABASE:ecommerce}
+    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:ecommerce}
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_ROOT_PASSWORD:admin123}
   jpa:
@@ -19,7 +19,7 @@ jwt:
   expiration: 86400
 
 upload:
-  path: D:\Practice\Java\uniclub\images123
+  path: D:\Practice\Java\ecommerce\images123
 
 custom:
   redis:
