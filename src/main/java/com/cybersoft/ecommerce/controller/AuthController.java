@@ -28,7 +28,7 @@ public class AuthController {
         Map<String, Object> user = authService.authenticateAndFetchProfile(code, loginType);
         if (user == null) {
             BaseResponse response = new BaseResponse();
-            response.setCode(400);g
+            response.setCode(400);
             response.setMessage("Login failed");
             return ResponseEntity.ok(response);
         }
