@@ -33,9 +33,11 @@ public class ProductServiceImp implements ProductService {
 
             ProductEntity product = new ProductEntity();
             product.setName(file.getName());
+            product.setPrice(file.getPrice());
 
             BrandEntity brand = new BrandEntity();
             brand.setId(file.getBrandId());
+            product.setBrand(brand);
 
             product = productRepository.save(product);
 
@@ -69,9 +71,12 @@ public class ProductServiceImp implements ProductService {
             ProductDto productDto = new ProductDto();
             productDto.setId(product.getId());
             productDto.setName(product.getName());
-            productDto.setNote(product.getNote());
-            productDto.setRate(product.getRate());
-
+            productDto.setPrice(product.getPrice());
+            if (!product.getVariants().isEmpty()) {
+                productDto.setImage("http://localhost:8080/download/" + product.getVariants().get(0).getImages());
+            } else {
+                productDto.setImage("");
+            }
             return productDto;
         }).toList();
     }

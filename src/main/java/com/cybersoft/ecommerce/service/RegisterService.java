@@ -24,6 +24,7 @@ public class RegisterService {
             UserEntity user = new UserEntity();
             user.setEmail(request.email());
             user.setPassword(encodedPassword);
+            user.setFullname(request.fullname());
 
             userRepository.save(user);
         } catch(Exception e) {
