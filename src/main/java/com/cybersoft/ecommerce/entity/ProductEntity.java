@@ -19,11 +19,11 @@ public class ProductEntity {
 
     @Column(name = "note")
     private String note;
+    private String description;
 
     @Column(name = "rate")
     private double rate;
 
-    @OneToMany(mappedBy = "product")
-    @JsonIgnore
-    private List<VariantEntity> variants;
+    @OneToMany(mappedBy = "productEntity")
+    private List<ProductDetailEntity> detailEntityList;
 }
