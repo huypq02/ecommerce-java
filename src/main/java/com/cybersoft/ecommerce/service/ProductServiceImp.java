@@ -28,6 +28,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public void insertProduct(InsertProductionRequest file) {
+<<<<<<< HEAD
         try {
             fileService.uploadFile(file);
 
@@ -58,6 +59,40 @@ public class ProductServiceImp implements ProductService {
         } catch (Exception e) {
             throw new InsertException("[insertProduct] Cannot insert product");
         }
+=======
+//        try {
+//            fileService.uploadFile(file);
+//
+//            ProductEntity product = new ProductEntity();
+//            product.setName(file.getName());
+//            product.setPrice(file.getPrice());
+//
+//            BrandEntity brand = new BrandEntity();
+//            brand.setId(file.getBrandId());
+//            product.setBrand(brand);
+//
+//            product = productRepository.save(product);
+//
+//            VariantEntity variant = new VariantEntity();
+//            variant.setProduct(product);
+//
+//            ColorEntity color = new ColorEntity();
+//            color.setId(file.getColorId());
+//            variant.setColor(color);
+//
+//            SizeEntity size = new SizeEntity();
+//            size.setId(file.getSizeId());
+//            variant.setSize(size);
+//
+//            variant.setImages(file.getFile().getOriginalFilename());
+//            variant.setQuantity(file.getQuantity());
+//            variant.setPrice(file.getPrice());
+//            variantRepository.save(variant);
+//
+//        } catch (Exception e) {
+//            throw new InsertException("[insertProduct] Cannot insert product");
+//        }
+>>>>>>> b2f89ba (#4 - add productionEntity - addProductionDetail add)
     }
 
     @Override
@@ -68,10 +103,20 @@ public class ProductServiceImp implements ProductService {
         return productRepository.findAll(page).stream().map(product -> {
             ProductDto productDto = new ProductDto();
             productDto.setId(product.getId());
+<<<<<<< HEAD
             productDto.setName(product.getName());
             productDto.setNote(product.getNote());
             productDto.setRate(product.getRate());
 
+=======
+            productDto.setName(product.getProductEntity().getName());
+            productDto.setPrice(product.getPrice());
+            if (!product.getImageEntityList().isEmpty()) {
+                productDto.setUrlName("http://localhost:8080/download/" + product.getImageEntityList().get(0).getUrlName());
+            } else {
+                productDto.setUrlName("");
+            }
+>>>>>>> b2f89ba (#4 - add productionEntity - addProductionDetail add)
             return productDto;
         }).toList();
     }

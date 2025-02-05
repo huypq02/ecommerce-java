@@ -1,0 +1,2 @@
+1.                 productDto.setUrlName("http://localhost:8080/download/" + product.getImageEntityList().get(0).getUrlName());
+can thay doi localhost
