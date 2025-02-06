@@ -1,6 +1,7 @@
 package com.cybersoft.ecommerce.controller;
 
 import com.cybersoft.ecommerce.request.InsertProductionRequest;
+import com.cybersoft.ecommerce.response.BaseResponse;
 import com.cybersoft.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,11 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getAllProduct(@RequestParam int pageSize, @RequestParam int pageNumber){
-        return ResponseEntity.ok(productService.getAllProduct(pageSize, pageNumber));
+    public BaseResponse getAllProduct(@RequestParam int pageSize, @RequestParam int pageNumber){
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setCode(200);
+        baseResponse.setMessage("Success");
+        baseResponse.setData(productService.getAllProduct(pageSize,pageNumber));
+        return baseResponse;
     }
 }
