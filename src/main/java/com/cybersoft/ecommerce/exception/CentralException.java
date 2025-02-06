@@ -4,6 +4,7 @@ import com.cybersoft.ecommerce.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartException;
 
 @ControllerAdvice
 public class CentralException {
@@ -20,6 +21,14 @@ public class CentralException {
     public ResponseEntity<?> centralLogFileUpload(Exception e) {
         BaseResponse response = new BaseResponse();
         response.setCode(01);
+        response.setMessage(e.getMessage());
+
+        return ResponseEntity.badRequest().body(response);
+    }
+    @ExceptionHandler({AccessTokenException.class})
+    public ResponseEntity<?> centralLogAccessToken(Exception e) {
+        BaseResponse response = new BaseResponse();
+        response.setCode(99);
         response.setMessage(e.getMessage());
 
         return ResponseEntity.badRequest().body(response);
