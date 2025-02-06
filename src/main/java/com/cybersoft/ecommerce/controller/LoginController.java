@@ -14,7 +14,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<?> login(@RequestBody UserEntity user) {
         String token = loginService.login(user.getEmail(), user.getPassword());
         System.out.println(token);

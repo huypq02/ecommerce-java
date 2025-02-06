@@ -7,16 +7,13 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Entity(name = "role")
+@Entity(name = "roles")
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "role")
+    private String role;
 
-    @OneToMany(mappedBy = "role")
-    @JsonIgnore
-    private List<UserEntity> users;
 }
