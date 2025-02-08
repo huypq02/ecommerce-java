@@ -5,14 +5,20 @@ import com.cybersoft.ecommerce.dto.ProductDetailDto;
 import com.cybersoft.ecommerce.dto.ProductDto;
 import com.cybersoft.ecommerce.entity.*;
 import com.cybersoft.ecommerce.exception.InsertException;
+import com.cybersoft.ecommerce.repository.ImageRepository;
+import com.cybersoft.ecommerce.repository.ProductDetailRepository;
 import com.cybersoft.ecommerce.repository.ProductRepository;
 import com.cybersoft.ecommerce.repository.VariantRepository;
+import com.cybersoft.ecommerce.request.ImageRequest;
 import com.cybersoft.ecommerce.request.InsertProductionRequest;
+import com.cybersoft.ecommerce.request.ProductDetailRequest;
+import com.cybersoft.ecommerce.request.ProductRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,44 +32,100 @@ public class ProductServiceImp implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductDetailRepository productDetailRepository;
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
     private VariantRepository variantRepository;
 
-    @Override
-    public void insertProduct(InsertProductionRequest file) {
+//    @Override
+//    public void insertProduct(ProductRequest productRequest, MultipartFile[] files) {
 //        try {
-//            fileService.uploadFile(file);
-//
+//            // 1. Thêm sản phẩm
 //            ProductEntity product = new ProductEntity();
-//            product.setName(file.getName());
-//            product.setPrice(file.getPrice());
+//            product.setName(productRequest.getName());
+//            product.setNote(productRequest.getNote());
+//            product.setRate(productRequest.getRate() != null ? productRequest.getRate() : 5.0);
 //
-//            BrandEntity brand = new BrandEntity();
-//            brand.setId(file.getBrandId());
-//            product.setBrand(brand);
+//            // 2. Thêm các biến thể sản phẩm
+//            for (ProductDetailRequest detailRequest : productRequest.getProductDetailRequests()) {
+//                ProductDetailEntity productDetail = new ProductDetailEntity();
+//                productDetail.setProductEntity(product);
+//                productDetail.setPrice(detailRequest.getPrice());
+//                productDetail.setSize(detailRequest.getSize());
+//                productDetail.setColor(detailRequest.getColor());
+//                productDetail.setQuantity_stock(detailRequest.getQuantityStock());
+//                productDetailRepository.save(productDetail);
 //
-//            product = productRepository.save(product);
 //
-//            VariantEntity variant = new VariantEntity();
-//            variant.setProduct(product);
+//                // 3. Thêm danh sách hình ảnh của từng biến thể
+//                for (ImageRequest imageRequest : detailRequest.getImages()) {
+//                    ImageEntity image = new ImageEntity();
+//                    image.setProductDetailEntity(productDetail);
+//                    image.setUrlName(imageRequest.getUrl());
+//                    image.setAll_text(imageRequest.getAllText());
+//                    imageRepository.save(image);
+//                }
+//            }
 //
-//            ColorEntity color = new ColorEntity();
-//            color.setId(file.getColorId());
-//            variant.setColor(color);
-//
-//            SizeEntity size = new SizeEntity();
-//            size.setId(file.getSizeId());
-//            variant.setSize(size);
-//
-//            variant.setImages(file.getFile().getOriginalFilename());
-//            variant.setQuantity(file.getQuantity());
-//            variant.setPrice(file.getPrice());
-//            variantRepository.save(variant);
-//
+//            // 4. Lưu thông tin sản phẩm vào CSDL
+//            productRepository.save(product);
 //        } catch (Exception e) {
-//            throw new InsertException("[insertProduct] Cannot insert product");
+//            throw new InsertException("[insertProduct] Không thể thêm sản phẩm" + e);
 //        }
+//    }
+
+    @Override
+    public void insertProduct(ProductRequest productRequest, MultipartFile[] files) {
+
+        try {
+            // 1. Thêm sản phẩm
+            ProductEntity product = new ProductEntity();
+            product.setName(productRequest.getName());
+            product.setNote(productRequest.getNote());
+            if(productRequest.getRate() == null){
+                product.setRate(5);
+            } else {
+                product.setRate(productRequest.getRate());
+            }
+            //productRepository.save(product);
+            // 2. Thêm các biến thể sản phẩm
+            int fileIndex = 0;
+            for(ProductDetailRequest detailRequest : productRequest.getProductDetailRequests()){
+                ProductDetailEntity productDetail = new ProductDetailEntity();
+                productDetail.setProductEntity(product);
+                productDetail.setPrice(detailRequest.getPrice());
+                productDetail.setSize(detailRequest.getSize());
+                productDetail.setColor(detailRequest.getColor());
+                productDetail.setQuantity_stock(detailRequest.getQuantityStock());
+                productDetail.setProductEntity(product);
+                productDetailRepository.save(productDetail);
+                // 3. Thêm danh sách hình ảnh của từng biến thể
+                for (ImageRequest imageRequest : detailRequest.getImages()){
+                    if (fileIndex < files.length){
+                        MultipartFile file = files[fileIndex];
+                        String fileName = fileService.uploadFile(file);
+
+                        ImageEntity image = new ImageEntity();
+                        image.setProductDetailEntity(productDetail);
+                        image.setUrlName(fileName);
+                        image.setAll_text(imageRequest.getAllText());
+                        //productDetail.getImageEntityList().add(image);
+                        imageRepository.save(image);
+                        fileIndex++;  // Chuyển sang ảnh tiếp theo
+
+                    }
+                    //product.getDetailEntityList().add(productDetail);
+                }
+                productRepository.save(product);
+            }
+
+
+        } catch (Exception e) {
+            throw new InsertException("[insertProduct] Cannot insert product");
+        }
     }
 
     @Override
