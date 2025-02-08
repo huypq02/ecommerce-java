@@ -1,2 +1,5 @@
 1.                 productDto.setUrlName("http://localhost:8080/download/" + product.getImageEntityList().get(0).getUrlName());
 can thay doi localhost
+2. Lỗi cổng kết nối     url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3307}/${MYSQL_DATABASE:ecommerce}
+vì set trên file cố định thì la cổng 3307
+3.

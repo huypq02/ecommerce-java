@@ -38,6 +38,8 @@ public class SecurityConfig {
                     request.requestMatchers("/user/auth/social", "/user/auth/social/callback").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/product").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/category").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/collection").permitAll();
+
 
                     request.requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.PUT, "/product").hasRole("ADMIN");
@@ -65,7 +67,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500"));
+        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);

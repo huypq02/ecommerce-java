@@ -24,6 +24,6 @@ public class ProductDetailEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity productEntity;
 
-    @OneToMany
+    @OneToMany(mappedBy = "productDetailEntity")
     private List<ImageEntity> imageEntityList;
 }
