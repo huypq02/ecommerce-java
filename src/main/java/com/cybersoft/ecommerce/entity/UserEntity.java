@@ -10,6 +10,8 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "oauth_id")
+    private String oauthId;
     @Column(name = "email")
     private String email;
 

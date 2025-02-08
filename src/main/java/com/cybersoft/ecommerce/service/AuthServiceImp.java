@@ -1,24 +1,38 @@
 package com.cybersoft.ecommerce.service;
 
+import com.cybersoft.ecommerce.dto.UserDto;
+import com.cybersoft.ecommerce.entity.UserEntity;
 import com.cybersoft.ecommerce.repository.AuthRepository;
+import com.cybersoft.ecommerce.repository.UserRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import javax.crypto.SecretKey;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImp implements AuthService {
     @Autowired
     private AuthRepository authRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    // Oauth2 Facebook
+    @Value("${jwt.secret}")
+    private String secret;
+
+    // Facebook OAuth2 configuration
     @Value("${spring.security.oauth2.client.registration.facebook.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.client.registration.facebook.client-secret}")
@@ -32,7 +46,7 @@ public class AuthServiceImp implements AuthService {
 //    @Value("${spring.security.oauth2.client.registration.facebook.scope}")
 //    private String scope;
     @Value("${spring.security.oauth2.client.registration.facebook.user-info-uri}")
-    private String userInfoUri;
+    private String facebookUserInfoUri;
 
     // Oauth2 Google
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
@@ -54,8 +68,9 @@ public class AuthServiceImp implements AuthService {
 //        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         loginType = loginType.toLowerCase();
         String accessToken = "";
-        String userInfo = "";
         String url = "";
+        String userInfoUri = "";
+        Map<String, Object>  userInfo = null;
         switch (loginType) {
             case "facebook":
                 url = tokenUri
@@ -65,7 +80,7 @@ public class AuthServiceImp implements AuthService {
                         + "&code=" + code;
                 Map<String, String> response = restTemplate.getForObject(url, Map.class);
                 accessToken = response.get("access_token");
-                userInfo = userInfoUri + "&access_token=" + accessToken;
+                userInfoUri = facebookUserInfoUri + "&access_token=" + accessToken;
                 break;
             case "google":
                 // Call Google API to get user profile
@@ -78,11 +93,13 @@ public class AuthServiceImp implements AuthService {
 
                 String body = res.getBody().toString();
                 accessToken = body.split(",")[0].replace("{access_token=", "");
-                userInfo = googleUserInfoUri + "?access_token=" + accessToken;
+                userInfoUri = googleUserInfoUri + "?access_token=" + accessToken;
                 break;
             default:
         }
-        return restTemplate.getForObject(userInfo, Map.class);
+
+        userInfo = restTemplate.getForObject(userInfoUri, Map.class);
+        return userInfo;
     }
 
     @Override
@@ -91,7 +108,7 @@ public class AuthServiceImp implements AuthService {
         loginType = loginType.toLowerCase();
         switch (loginType) {
             case "facebook":
-                url = authUri + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&scope=email%20public_profile" + "&response_type=code" + "&loginType=" + loginType;
+                url = authUri + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&scope=email" + "&response_type=code" + "&loginType=" + loginType;
                 break;
             case "google":
                 url = googleAuthUri + "?client_id=" + googleClientId + "&redirect_uri=" + googleRedirectUri + "&scope=email" + "&response_type=code" + "&loginType=" + loginType;
@@ -99,5 +116,39 @@ public class AuthServiceImp implements AuthService {
             default:
         }
         return url;
+    }
+
+    @Override
+    public String loginOrSignup(Map<String, Object> user) {
+        // login or sign up by oauth_id
+        String token = "";
+        UserDto userDto = new UserDto();
+        userDto.setEmail((String) user.get("email"));
+        userDto.setOauthId((String) user.get("id"));
+
+        Optional<UserEntity> existedUser = userRepository.findByOauthId(userDto.getOauthId());
+        System.out.println(user); // TODO remove this line in production
+        if (existedUser.isPresent()) {
+            // Login
+            UserEntity userEntity = existedUser.get();
+            // Generate token
+            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+            token = Jwts.builder().setSubject(userEntity.getOauthId()).signWith(key).compact();
+        } else {
+            // Sign up
+            UserEntity newUser = new UserEntity();
+            // Set default role for new user
+            newUser.setEmail(userDto.getEmail());
+            newUser.setOauthId(userDto.getOauthId());
+            userRepository.save(newUser);
+
+            // Generate token
+            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+            token = Jwts.builder().setSubject(newUser.getOauthId()).signWith(key).compact();
+        }
+
+        System.out.println(token); // TODO remove this line in production
+
+        return token;
     }
 }
