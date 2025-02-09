@@ -15,7 +15,7 @@ public class ImageEntity {
     private String all_text;
 
     @ManyToOne
-    @JoinColumn(name = "product_detai_id")
+    @JoinColumn(name = "product_detail_id")
     private ProductDetailEntity productDetailEntity;
 
 

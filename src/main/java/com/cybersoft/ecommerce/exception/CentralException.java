@@ -12,7 +12,6 @@ public class CentralException {
         BaseResponse response = new BaseResponse();
         response.setCode(99);
         response.setMessage(e.getMessage());
-
         return ResponseEntity.internalServerError().body(response);
     }
 
@@ -21,7 +20,6 @@ public class CentralException {
         BaseResponse response = new BaseResponse();
         response.setCode(01);
         response.setMessage(e.getMessage());
-
         return ResponseEntity.badRequest().body(response);
     }
 }

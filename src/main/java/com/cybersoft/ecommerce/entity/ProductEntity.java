@@ -19,7 +19,6 @@ public class ProductEntity {
 
     @Column(name = "note")
     private String note;
-    private String description;
 
     @Column(name = "rate")
     private double rate;
