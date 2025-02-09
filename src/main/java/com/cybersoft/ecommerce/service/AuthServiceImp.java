@@ -124,7 +124,11 @@ public class AuthServiceImp implements AuthService {
         String token = "";
         UserDto userDto = new UserDto();
         userDto.setEmail((String) user.get("email"));
-        userDto.setOauthId((String) user.get("id"));
+        if (user.get("id") != null && !user.get("id").equals("")) {
+            userDto.setOauthId((String) user.get("id"));
+        } else {
+            userDto.setOauthId((String) user.get("sub"));
+        }
 
         Optional<UserEntity> existedUser = userRepository.findByOauthId(userDto.getOauthId());
         System.out.println(user); // TODO remove this line in production
