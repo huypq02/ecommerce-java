@@ -16,13 +16,12 @@ spring:
           facebook:
             client-id: "${FACEBOOK_CLIENT_ID:551173291210699}"
             client-secret: "${FACEBOOK_CLIENT_SECRET:4c491d2c566169c27e644f57c1d474dd}"
-            redirect-uri: "${FACEBOOK_REDIRECT_URI:http://localhost:8080/user/auth/social/callback}"
+            redirect-uri: "${FACEBOOK_REDIRECT_URI:http://localhost:3000/user/auth/social/callback}"
             auth-uri: "https://www.facebook.com/v11.0/dialog/oauth"
             token-uri: "https://graph.facebook.com/v11.0/oauth/access_token"
             user-info-uri: "https://graph.facebook.com/me?fields=id,name,email,picture.type(large)"
-            scope:
-              - email
-              - public_profile
+            scope: "email%20public_profile"
+            response-type: code
 
 cybersoft:
   username: admin
