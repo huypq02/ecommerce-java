@@ -2,7 +2,7 @@ create database if not exists ecommerce;
 
 USE ecommerce
 
--- Me
+ -- Me
 create table if not exists product(
 	id INT NOT NULL AUTO_INCREMENT,
 	name varchar(100),
@@ -40,7 +40,7 @@ ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 -- Mr. Tin
-create table review(
+create table if not exists review(
 	id int auto_increment primary key,
 	user_id int,
 	product_id int,
@@ -49,17 +49,17 @@ create table review(
 	review text
 )
 
-CREATE TABLE user (
+create table if not exists users (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	user_info_id INT,
 	role_id INT,
 	email VARCHAR(320),
 	password VARCHAR(255),
-	oauth_id VARCHAR(255), -- for login with social network
+	oauth_id VARCHAR(255) -- for login with social network
 );
 
 ALTER TABLE review ADD CONSTRAINT FK_user_id_review 
-FOREIGN KEY(user_id) REFERENCES user(id)
+FOREIGN KEY(user_id) REFERENCES users(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
@@ -68,13 +68,13 @@ FOREIGN KEY(product_id) REFERENCES product(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
-create table product_category(
+create table if not exists product_category(
 	id int auto_increment primary key,
 	category_id int,
 	product_id int
 )
 
-create table category(
+create table if not exists category(
 	id int auto_increment primary key,
 	category nvarchar(50)
 )
@@ -90,7 +90,7 @@ ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 -- Nga
-CREATE TABLE user_info (
+create table if not exists user_info (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	full_name VARCHAR (100),
 	gender VARCHAR (6),
@@ -101,24 +101,24 @@ CREATE TABLE user_info (
 );
 
 
-CREATE TABLE role (
+create table if not exists roles (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR (20),
 	role VARCHAR (10)
 );
 
-ALTER TABLE user ADD CONSTRAINT FK_user_info_id_user
+ALTER TABLE users ADD CONSTRAINT FK_user_info_id_user
 FOREIGN KEY (user_info_id) REFERENCES user_info (id)
 ON DELETE CASCADE 
 ON UPDATE CASCADE; -- Delete/Update child if Delete/Update father
 
-ALTER TABLE user ADD CONSTRAINT FK_role_id_user
-FOREIGN KEY (role_id) REFERENCES role (id)
+ALTER TABLE users ADD CONSTRAINT FK_role_id_user
+FOREIGN KEY (role_id) REFERENCES roles (id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 -- Mr. Thuong
-CREATE TABLE cart (
+create table if not exists cart (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_info_id INT NOT NULL
 );
@@ -130,7 +130,7 @@ REFERENCES user_info(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
-CREATE TABLE cart_detail (
+create table if not exists cart_detail (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cart_id INT NOT NULL,
     product_id INT NOT NULL,
@@ -151,7 +151,7 @@ REFERENCES product(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
-CREATE TABLE orders (
+create table if not exists orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_info_id INT NOT NULL,
     date DATE NOT NULL,
