@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> {
                     // giúp định nghĩa quyền truy cập cho các link
                     request.requestMatchers("/login", "/register", "/download/**").permitAll();
-                    request.requestMatchers("/user/auth/social", "/user/auth/social/callback").permitAll();
+                    request.requestMatchers("/user/auth/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/product").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/category").permitAll();
 
@@ -65,7 +65,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500"));
+        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);
