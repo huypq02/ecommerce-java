@@ -15,5 +15,9 @@ public class CartEntity {
     @OneToMany(mappedBy = "cartDetail")
     private List<CartDetailEntity> cartDetailEntityList;
 
+    @ManyToOne
+    @JoinColumn(name="user_info_id")
+    private UserInfoEntity userInfoEntity;
+
 
 }
