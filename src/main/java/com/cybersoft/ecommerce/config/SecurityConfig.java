@@ -40,7 +40,7 @@ public class SecurityConfig {
                     request.requestMatchers(HttpMethod.GET, "/category").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/collection").permitAll();
 
-
+                    request.requestMatchers(HttpMethod.POST, "/cart/**").permitAll();
                     request.requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.PUT, "/product").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.DELETE, "/product").hasRole("ADMIN");
