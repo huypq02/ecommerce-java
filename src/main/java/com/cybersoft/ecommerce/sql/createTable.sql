@@ -179,8 +179,12 @@ ON UPDATE CASCADE;
 ALTER TABLE orders DROP CONSTRAINT FK_user_info_order;
 ALTER TABLE orders DROP COLUMN user_info_id;
 ALTER TABLE orders ADD user_id int;
-ALTER TABLE orders ADD CONSTRAINT FK_user_id_orders
-FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE orders
+ADD CONSTRAINT FK_user_id_orders
+FOREIGN KEY (user_id)
+REFERENCES users(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 ALTER TABLE orders ADD (
 	full_name varchar(100),
 	address varchar(255),
