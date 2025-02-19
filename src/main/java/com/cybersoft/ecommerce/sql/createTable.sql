@@ -120,13 +120,13 @@ ON UPDATE CASCADE;
 -- Mr. Thuong
 create table if not exists cart (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_info_id INT NOT NULL
+    user_id INT NOT NULL
 );
 
 ALTER TABLE cart
 ADD CONSTRAINT FK_user_info_cart
-FOREIGN KEY (user_info_id)
-REFERENCES user_info(id)
+FOREIGN KEY (user_id)
+REFERENCES users(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
@@ -153,15 +153,63 @@ ON UPDATE CASCADE;
 
 create table if not exists orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_info_id INT NOT NULL,
+    user_id INT NOT NULL,
     date DATE NOT NULL,
     payment_method ENUM('Cash', 'Card', 'Online') NOT NULL,
-    status ENUM('Pending', 'Completed', 'Cancelled') NOT NULL
+    status ENUM('Pending', 'Completed', 'Cancelled') NOT NULL,
+    full_name VARCHAR (255) NOT NULL,
+    address VARCHAR (255) NOT NULL,
+    phone VARCHAR (10) NOT NULL,
+    postal_code VARCHAR (10) NOT NULL,
+    city VARCHAR (50) NOT NULL,
+    country VARCHAR (50) NOT NULL,
+    province VARCHAR (50) NOT NULL,
+    apt VARCHAR (50),
+    transaction_id VARCHAR (50)
+    shipping_fee DOUBLE NOT NULL,
+    tax DOUBLE NOT NULL,
+    discount DOUBLE NOT NULL,
+    total DOUBLE NOT NULL
 );
 
 ALTER TABLE orders
 ADD CONSTRAINT FK_user_info_order
-FOREIGN KEY (user_info_id)
-REFERENCES user_info(id)
+FOREIGN KEY (user_id)
+REFERENCES users(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+
+create table if not exists order_detail(
+	id INT NOT NULL AUTO_INCREMENT,
+	order_id INT,
+	product_detail_id INT,
+	color varchar(40),
+	size varchar(10),
+	quantity int,
+	present_unit_price double,
+	PRIMARY KEY (id)
+)
+
+ALTER TABLE order_detail ADD CONSTRAINT FK_product_detail_id_order_detail
+FOREIGN KEY (product_detail_id) REFERENCES product_detail(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE order_detail ADD CONSTRAINT FK_order_id_order_detail
+FOREIGN KEY (order_id) REFERENCES orders(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+create table if not exists order_status_history(
+	id INT NOT NULL AUTO_INCREMENT,
+	order_id INT,
+	date date,
+	status varchar(20),
+	PRIMARY KEY (id)
+)
+
+ALTER TABLE order_status_history ADD CONSTRAINT FK_order_id_order_status_history
+FOREIGN KEY (order_id) REFERENCES orders(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;

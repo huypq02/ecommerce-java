@@ -1,0 +1,110 @@
+package com.cybersoft.ecommerce.service;
+
+import com.cybersoft.ecommerce.entity.*;
+import com.cybersoft.ecommerce.repository.OrderDetailRepository;
+import com.cybersoft.ecommerce.repository.OrderRepository;
+import com.cybersoft.ecommerce.repository.OrderStatusHistoryRepository;
+import com.cybersoft.ecommerce.repository.UserRepository;
+import com.cybersoft.ecommerce.request.OrderDetailRequest;
+import com.cybersoft.ecommerce.request.OrderRequest;
+import com.cybersoft.ecommerce.request.OrderStatusHistoryRequest;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+
+import static com.cybersoft.ecommerce.utils.DateUtil.convertStringToDate;
+
+@Service
+public class OrderServiceImp implements OrderService {
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private OrderStatusHistoryRepository orderStatusHistoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Override
+    public void addOrder(OrderRequest orderRequest) {
+
+        try {
+            // Step 1: Get user info from token by parsing JWT
+            String authorizationHeader = request.getHeader("Authorization");
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                throw new RuntimeException("Missing or invalid Authorization header");
+            }
+
+            String token = authorizationHeader.substring(7);
+            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            int userId = claims.get("userId", Integer.class);
+
+            // Step 2: Save this user info to order
+            OrderEntity order = new OrderEntity();
+            order.setUser(userRepository.findById(userId).get());
+            order.setDate(orderRequest.getDate());
+            order.setPaymentMethod(orderRequest.getPaymentMethod());
+            order.setStatus(orderRequest.getStatus()); // TODO: auto generate status
+            order.setFullName(orderRequest.getFullName());
+            order.setPhone(orderRequest.getPhone());
+            order.setAddress(orderRequest.getAddress());
+            order.setPostalCode(orderRequest.getPostalCode());
+            order.setCity(orderRequest.getCity());
+            order.setCountry(orderRequest.getCountry());
+            order.setProvince(orderRequest.getProvince());
+            order.setApt(orderRequest.getApt());
+            order.setTransactionId(orderRequest.getTransactionId());
+            order.setShippingFee(orderRequest.getShippingFee());
+            order.setTax(orderRequest.getTax());
+            order.setDiscount(orderRequest.getDiscount());
+            order.setTotal(orderRequest.getTotal());
+            // save order
+            orderRepository.save(order);
+
+            // add product to order
+            for (OrderDetailRequest orderDetailRequest : orderRequest.getOrderDetail()) {
+                OrderDetailEntity orderDetail = new OrderDetailEntity();
+                orderDetail.setOrder(order);
+                orderDetail.setQuantity(orderDetailRequest.getQuantity());
+                orderDetail.setPresentUnitPrice(orderDetailRequest.getPrice());
+                orderDetail.setColor(orderDetailRequest.getColor());
+                orderDetail.setSize(orderDetailRequest.getSize());
+                orderDetailRepository.save(orderDetail);
+            }
+
+            for (OrderStatusHistoryEntity orderStatusHistoryEntity : orderRequest.getOrderStatusHistory()) {
+                OrderStatusHistoryEntity orderStatusHistory = new OrderStatusHistoryEntity();
+                orderStatusHistory.setOrder(order);
+                orderStatusHistory.setStatus(orderStatusHistoryEntity.getStatus());
+                orderStatusHistory.setDate(convertStringToDate(orderStatusHistoryEntity.getDate()));
+                orderStatusHistoryRepository.save(orderStatusHistory);
+            }
+
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Order failed");
+        }
+    }
+}
