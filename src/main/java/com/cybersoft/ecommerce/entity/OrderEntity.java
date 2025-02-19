@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,7 +15,7 @@ public class OrderEntity {
     private int id;
 
     @Column(name = "date")
-    private String date;
+    private Date date;
     @Column(name = "payment_method")
     private String paymentMethod;
     @Column(name = "status")
