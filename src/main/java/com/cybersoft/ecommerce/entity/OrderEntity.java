@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+<<<<<<< HEAD
 import java.util.Date;
+=======
+>>>>>>> 9849228 (feat: order)
 import java.util.List;
 
 @Data
@@ -15,7 +18,11 @@ public class OrderEntity {
     private int id;
 
     @Column(name = "date")
+<<<<<<< HEAD
     private Date date;
+=======
+    private String date;
+>>>>>>> 9849228 (feat: order)
     @Column(name = "payment_method")
     private String paymentMethod;
     @Column(name = "status")

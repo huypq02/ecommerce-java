@@ -19,8 +19,11 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 
+<<<<<<< HEAD
 import java.util.Date;
 
+=======
+>>>>>>> 9849228 (feat: order)
 import static com.cybersoft.ecommerce.utils.DateUtil.convertStringToDate;
 
 @Service
@@ -66,11 +69,15 @@ public class OrderServiceImp implements OrderService {
             // Step 2: Save this user info to order
             OrderEntity order = new OrderEntity();
             order.setUser(userRepository.findById(userId).get());
+<<<<<<< HEAD
             // convert string to date
             Date now = new Date();
             Date orderDate = convertStringToDate(orderRequest.getDate());
             order.setDate(orderDate != null ? orderDate : now);
 
+=======
+            order.setDate(orderRequest.getDate());
+>>>>>>> 9849228 (feat: order)
             order.setPaymentMethod(orderRequest.getPaymentMethod());
             order.setStatus(orderRequest.getStatus()); // TODO: auto generate status
             order.setFullName(orderRequest.getFullName());
@@ -100,6 +107,7 @@ public class OrderServiceImp implements OrderService {
                 orderDetailRepository.save(orderDetail);
             }
 
+<<<<<<< HEAD
             for (OrderStatusHistoryRequest orderStatusHistoryRequest : orderRequest.getOrderStatusHistory()) {
                 OrderStatusHistoryEntity orderStatusHistory = new OrderStatusHistoryEntity();
                 orderStatusHistory.setOrder(order);
@@ -107,6 +115,13 @@ public class OrderServiceImp implements OrderService {
                 // convert string to date
                 Date statusDate = convertStringToDate(orderStatusHistoryRequest.getDate());
                 orderStatusHistory.setDate(statusDate != null ? statusDate : now);
+=======
+            for (OrderStatusHistoryEntity orderStatusHistoryEntity : orderRequest.getOrderStatusHistory()) {
+                OrderStatusHistoryEntity orderStatusHistory = new OrderStatusHistoryEntity();
+                orderStatusHistory.setOrder(order);
+                orderStatusHistory.setStatus(orderStatusHistoryEntity.getStatus());
+                orderStatusHistory.setDate(convertStringToDate(orderStatusHistoryEntity.getDate()));
+>>>>>>> 9849228 (feat: order)
                 orderStatusHistoryRepository.save(orderStatusHistory);
             }
 

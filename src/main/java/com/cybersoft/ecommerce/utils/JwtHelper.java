@@ -37,10 +37,15 @@ public class JwtHelper {
         String data = null;
 
         try {
+<<<<<<< HEAD
             Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
             Map<String, Object> roleInfo = (Map<String, Object>) claims.get("roleInfo");
             System.out.println(roleInfo.get("role"));
             data = roleInfo.get("role").toString();
+=======
+            data = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().toString();
+            System.out.println(data);
+>>>>>>> 9849228 (feat: order)
         } catch (Exception e) {
             e.printStackTrace();
         }

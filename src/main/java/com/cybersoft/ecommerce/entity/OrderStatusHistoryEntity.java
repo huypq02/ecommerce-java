@@ -14,7 +14,11 @@ public class OrderStatusHistoryEntity {
     private int id;
 
     @Column(name = "date")
+<<<<<<< HEAD
     private Date date;
+=======
+    private String date;
+>>>>>>> 9849228 (feat: order)
     @Column(name = "status")
     private String status;
 
