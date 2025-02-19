@@ -14,7 +14,7 @@ public class OrderStatusHistoryEntity {
     private int id;
 
     @Column(name = "date")
-    private String date;
+    private Date date;
     @Column(name = "status")
     private String status;
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class OrderRequest {
     private List<OrderDetailRequest> orderDetail;
-    private List<OrderStatusHistoryEntity> orderStatusHistory;
+    private List<OrderStatusHistoryRequest> orderStatusHistory;
     private String fullName;
     private String phone;
     private String address;
