@@ -32,13 +32,14 @@ public class JwtHelper {
 
     public String getDataToken(String token) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-        String role = null;
+        String data = null;
 
         try {
-            role = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject();
+            data = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().toString();
+            System.out.println(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return role;
+        return data;
     }
 }
