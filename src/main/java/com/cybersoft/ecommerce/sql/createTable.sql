@@ -45,7 +45,7 @@ create table if not exists review(
 	user_id int,
 	product_id int,
 	date date,
-	 rate DECIMAL(3,2) CHECK (rate BETWEEN 1.00 AND 5.00),
+	rate DECIMAL(3,2) CHECK (rate BETWEEN 1.00 AND 5.00),
 	review text
 )
 
