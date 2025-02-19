@@ -5,6 +5,6 @@ import java.util.Date;
 
 @Data
 public class OrderStatusHistoryRequest {
-    private Date date;
+    private String date;
     private String status;
 }
