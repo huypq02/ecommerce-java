@@ -16,6 +16,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class AuthController {
+    private static final int ADMIN_ROLE_ID = 1;
+    private static final int USER_ROLE_ID = 2;
+
     @Autowired
     private AuthService authService;
     @Autowired
@@ -41,7 +44,7 @@ public class AuthController {
         }
 
         // Register or Login user if not exists
-        String token = authService.loginOrSignup(user);
+        String token = authService.loginOrSignup(user, USER_ROLE_ID);
         BaseResponse response = new BaseResponse();
         response.setData(token);
         response.setCode(200);

@@ -1,5 +1,6 @@
 package com.cybersoft.ecommerce.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Map;
 
 @Component
 public class JwtHelper {
@@ -32,13 +34,16 @@ public class JwtHelper {
 
     public String getDataToken(String token) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-        String role = null;
+        String data = null;
 
         try {
-            role = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject();
+            Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+            Map<String, Object> roleInfo = (Map<String, Object>) claims.get("roleInfo");
+            System.out.println(roleInfo.get("role"));
+            data = roleInfo.get("role").toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return role;
+        return data;
     }
 }

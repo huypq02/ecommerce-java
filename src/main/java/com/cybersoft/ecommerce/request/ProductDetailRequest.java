@@ -11,5 +11,4 @@ public class ProductDetailRequest {
     private int quantityStock;
     private double price;
     private List<ImageRequest> images;
-
 }

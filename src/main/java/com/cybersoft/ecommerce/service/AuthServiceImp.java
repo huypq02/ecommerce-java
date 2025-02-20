@@ -3,6 +3,7 @@ package com.cybersoft.ecommerce.service;
 import com.cybersoft.ecommerce.dto.UserDto;
 import com.cybersoft.ecommerce.entity.UserEntity;
 import com.cybersoft.ecommerce.repository.AuthRepository;
+import com.cybersoft.ecommerce.repository.RoleRepository;
 import com.cybersoft.ecommerce.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -17,11 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.SecretKey;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class AuthServiceImp implements AuthService {
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private AuthRepository authRepository;
     @Autowired
@@ -43,10 +48,12 @@ public class AuthServiceImp implements AuthService {
     private String authUri;
     @Value("${spring.security.oauth2.client.registration.facebook.token-uri}")
     private String tokenUri;
-//    @Value("${spring.security.oauth2.client.registration.facebook.scope}")
-//    private String scope;
+    @Value("${spring.security.oauth2.client.registration.facebook.scope}")
+    private String facebookScope;
     @Value("${spring.security.oauth2.client.registration.facebook.user-info-uri}")
     private String facebookUserInfoUri;
+    @Value("${spring.security.oauth2.client.registration.facebook.response-type}")
+    private String responseType;
 
     // Oauth2 Google
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
@@ -108,7 +115,7 @@ public class AuthServiceImp implements AuthService {
         loginType = loginType.toLowerCase();
         switch (loginType) {
             case "facebook":
-                url = authUri + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&scope=email" + "&response_type=code" + "&loginType=" + loginType;
+                url = authUri + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&scope=" + facebookScope + "&response_type=" + responseType + "&loginType=" + loginType;
                 break;
             case "google":
                 url = googleAuthUri + "?client_id=" + googleClientId + "&redirect_uri=" + googleRedirectUri + "&scope=email" + "&response_type=code" + "&loginType=" + loginType;
@@ -119,7 +126,7 @@ public class AuthServiceImp implements AuthService {
     }
 
     @Override
-    public String loginOrSignup(Map<String, Object> user) {
+    public String loginOrSignup(Map<String, Object> user, int roleId) {
         // login or sign up by oauth_id
         String token = "";
         UserDto userDto = new UserDto();
@@ -135,20 +142,48 @@ public class AuthServiceImp implements AuthService {
         if (existedUser.isPresent()) {
             // Login
             UserEntity userEntity = existedUser.get();
-            // Generate token
+            // Set issued at and expiration times
+            Date now = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(now);
+            calendar.add(Calendar.HOUR, 1); // Set expiration time to 1 hour from now
+            Date expiration = calendar.getTime();
             SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-            token = Jwts.builder().setSubject(userEntity.getOauthId()).signWith(key).compact();
+            token = Jwts.builder()
+                    .claim("userId", userEntity.getId())
+                    .claim("roleInfo", userEntity.getRole())
+                    .claim("email", userEntity.getEmail())
+                    .claim("oauthId", userEntity.getOauthId())
+                    .issuedAt(now)
+                    .expiration(expiration)
+                    .signWith(key)
+                    .compact();
+
         } else {
             // Sign up
             UserEntity newUser = new UserEntity();
             // Set default role for new user
             newUser.setEmail(userDto.getEmail());
             newUser.setOauthId(userDto.getOauthId());
+            newUser.setRole(roleRepository.findById(roleId).get());
             userRepository.save(newUser);
 
-            // Generate token
+            // Set issued at and expiration times
+            Date now = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(now);
+            calendar.add(Calendar.HOUR, 1); // Set expiration time to 1 hour from now
+            Date expiration = calendar.getTime();
             SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-            token = Jwts.builder().setSubject(newUser.getOauthId()).signWith(key).compact();
+            token = Jwts.builder()
+                    .claim("userId", newUser.getId())
+                    .claim("roleInfo", newUser.getRole())
+                    .claim("email", newUser.getEmail())
+                    .claim("oauthId", newUser.getOauthId())
+                    .issuedAt(now)
+                    .expiration(expiration)
+                    .signWith(key)
+                    .compact();
         }
 
         System.out.println(token); // TODO remove this line in production
