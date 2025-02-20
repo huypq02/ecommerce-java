@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 import javax.crypto.SecretKey;
 
@@ -32,12 +34,23 @@ public class LoginService {
         System.out.println(user);
         if (user.isPresent()) {
             UserEntity userEntity = user.get();
+            // Set issued at and expiration times
+            Date now = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(now);
+            calendar.add(Calendar.HOUR, 1); // Set expiration time to 1 hour from now
+            Date expiration = calendar.getTime();
             if (passwordEncoder.matches(password, userEntity.getPassword())) {
                 SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-                token = Jwts.builder().setSubject(userEntity.getEmail()).signWith(key).compact();
-                System.out.println(token);
+                token = Jwts.builder()
+                        .claim("userId", userEntity.getId())
+                        .claim("roleInfo", userEntity.getRole())
+                        .claim("email", userEntity.getEmail())
+                        .issuedAt(now)
+                        .expiration(expiration)
+                        .signWith(key)
+                        .compact();
             }
-
         }
         System.out.println(token);
         return token;

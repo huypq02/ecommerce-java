@@ -14,8 +14,8 @@ spring:
       client:
         registration:
           facebook:
-            client-id: "${FACEBOOK_CLIENT_ID:}"
-            client-secret: "${FACEBOOK_CLIENT_SECRET:}"
+            client-id: "${FACEBOOK_CLIENT_ID:XXXXXXXXXXXXXXXX}"
+            client-secret: "${FACEBOOK_CLIENT_SECRET:XXXXXXXXXXXXXXXX}"
             redirect-uri: "${FACEBOOK_REDIRECT_URI:http://localhost:3000/user/auth/social/callback}"
             auth-uri: "https://www.facebook.com/v11.0/dialog/oauth"
             token-uri: "https://graph.facebook.com/v11.0/oauth/access_token"
@@ -24,8 +24,8 @@ spring:
             response-type: code
 
           google:
-            client-id: "${GOOGLE_CLIENT_ID:}"
-            client-secret: "${GOOGLE_CLIENT_SECRET:}"
+            client-id: "${GOOGLE_CLIENT_ID:XXXXXXXXXXXXXXXX}"
+            client-secret: "${GOOGLE_CLIENT_SECRET:XXXXXXXXXXXXXXXX}"
             redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:8080/user/auth/social/callback}"
             auth-uri: "https://accounts.google.com/o/oauth2/v2/auth"
             token-uri: "https://www.googleapis.com/oauth2/v3/token"

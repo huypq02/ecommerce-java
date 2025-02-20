@@ -1,7 +1,9 @@
 package com.cybersoft.ecommerce.service;
 
+import com.cybersoft.ecommerce.entity.RoleEntity;
 import com.cybersoft.ecommerce.entity.UserEntity;
 import com.cybersoft.ecommerce.exception.InsertException;
+import com.cybersoft.ecommerce.repository.RoleRepository;
 import com.cybersoft.ecommerce.repository.UserRepository;
 import com.cybersoft.ecommerce.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +17,21 @@ public class RegisterService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleUserRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void register(RegisterRequest request){
+    public void register(RegisterRequest request, int roleId) {
         try{
             String encodedPassword = passwordEncoder.encode(request.password());
 
             UserEntity user = new UserEntity();
             user.setEmail(request.email());
             user.setPassword(encodedPassword);
+            user.setRole(roleUserRepository.findById(roleId).get());
+
+            System.out.println("User: " + user);
 
             userRepository.save(user);
         } catch(Exception e) {
