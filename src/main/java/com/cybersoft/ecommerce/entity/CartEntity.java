@@ -12,12 +12,12 @@ public class CartEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "cartDetail")
+    @OneToMany(mappedBy = "cartDetailID")
     private List<CartDetailEntity> cartDetailEntityList;
 
     @ManyToOne
-    @JoinColumn(name="user_info_id")
-    private UserInfoEntity userInfoEntity;
+    @JoinColumn(name="user_id")
+    private UserEntity userID;
 
 
 }
