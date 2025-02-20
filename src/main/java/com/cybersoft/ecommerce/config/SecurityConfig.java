@@ -34,6 +34,7 @@ public class SecurityConfig {
                     request.requestMatchers(HttpMethod.GET, "/product").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/category").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/collection").permitAll();
+                    request.requestMatchers(HttpMethod.GET, "/cart/**").permitAll();
                     request.requestMatchers(HttpMethod.POST, "/cart/**").permitAll(); // TODO remove on Production
                     request.requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.PUT, "/product").hasRole("ADMIN");

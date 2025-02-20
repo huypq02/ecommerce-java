@@ -3,6 +3,8 @@ package com.cybersoft.ecommerce.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity(name = "users")
 public class UserEntity {
@@ -21,5 +23,8 @@ public class UserEntity {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity role;
+
+    @OneToMany(mappedBy = "userID")
+    private List<CartEntity> cartEntityList;
 
 }

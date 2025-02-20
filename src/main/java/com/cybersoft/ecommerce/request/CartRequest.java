@@ -8,5 +8,5 @@ public class CartRequest {
     private int cartID;
     private int productID;
     private int quantity;
-    private UserInfoEntity userInfo;
+    private int  userID;
 }

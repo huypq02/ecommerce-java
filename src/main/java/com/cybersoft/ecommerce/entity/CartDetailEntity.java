@@ -14,10 +14,10 @@ public class CartDetailEntity {
 
     @ManyToOne
     @JoinColumn(name ="cart_id")
-    private CartEntity cartDetail;
+    private CartEntity cartDetailID;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private ProductEntity cartProduct;
+    private ProductEntity cartProductID;
 
 }
