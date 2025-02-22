@@ -155,7 +155,7 @@ create table if not exists orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     date DATE NOT NULL,
-    payment_method varchar(20) NOT NULL,
+    payment_method ENUM('Cash', 'Card', 'Online') NOT NULL,
     status ENUM('Pending', 'Completed', 'Cancelled') NOT NULL,
     full_name VARCHAR (255) NOT NULL,
     address VARCHAR (255) NOT NULL,
