@@ -179,35 +179,6 @@ REFERENCES users(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
-ALTER TABLE cart DROP CONSTRAINT FK_user_info_cart;
-ALTER TABLE cart DROP COLUMN user_info_id;
-ALTER TABLE cart ADD user_id int;
-ALTER TABLE cart
-ADD CONSTRAINT FK_user_id_cart
-FOREIGN KEY (user_id)
-REFERENCES users(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-
-ALTER TABLE orders DROP CONSTRAINT FK_user_info_order;
-ALTER TABLE orders DROP COLUMN user_info_id;
-ALTER TABLE orders ADD user_id int;
-ALTER TABLE orders
-ADD CONSTRAINT FK_user_id_orders
-FOREIGN KEY (user_id)
-REFERENCES users(id)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-ALTER TABLE orders ADD (
-	full_name varchar(100),
-	address varchar(255),
-	phone varchar(10),
-	postal_code varchar(10),
-	city varchar(50),
-	country varchar(50),
-	province varchar(50),
-	apt varchar(100)
-);
 
 create table if not exists order_detail(
 	id INT NOT NULL AUTO_INCREMENT,
