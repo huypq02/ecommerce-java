@@ -165,7 +165,7 @@ create table if not exists orders (
     country VARCHAR (50) NOT NULL,
     province VARCHAR (50) NOT NULL,
     apt VARCHAR (50),
-    transaction_id VARCHAR (50)
+    transaction_id VARCHAR (50),
     shipping_fee DOUBLE NOT NULL,
     tax DOUBLE NOT NULL,
     discount DOUBLE NOT NULL,

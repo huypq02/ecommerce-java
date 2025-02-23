@@ -26,7 +26,7 @@ spring:
           google:
             client-id: "${GOOGLE_CLIENT_ID:XXXXXXXXXXXXXXXX}"
             client-secret: "${GOOGLE_CLIENT_SECRET:XXXXXXXXXXXXXXXX}"
-            redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:8080/user/auth/social/callback}"
+            redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/social/callback/google}"
             auth-uri: "https://accounts.google.com/o/oauth2/v2/auth"
             token-uri: "https://www.googleapis.com/oauth2/v3/token"
             user-info-uri: "https://www.googleapis.com/oauth2/v3/userinfo"
