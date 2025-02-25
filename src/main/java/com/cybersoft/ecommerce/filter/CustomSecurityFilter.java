@@ -32,6 +32,7 @@ public class CustomSecurityFilter extends OncePerRequestFilter {
             String token = authenHeader.substring(7);
             boolean isSuccess = jwtHelper.decryptToken(token);
             if(isSuccess){
+                // TODO START: recheck this code snippet to see if it's correct
                 String role = jwtHelper.getDataToken(token);
 
                 List<SimpleGrantedAuthority> authoritiesList = new ArrayList<>();
@@ -43,6 +44,7 @@ public class CustomSecurityFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken("","", authoritiesList);
                 securityContext.setAuthentication(authenticationToken);
+                // TODO END: recheck this code snippet to see if it's correct
             }
         }
         filterChain.doFilter(request, response);

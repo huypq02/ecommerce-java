@@ -30,12 +30,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> {
                     // giúp định nghĩa quyền truy cập cho các link
                     request.requestMatchers("/login", "/register", "/download/**").permitAll();
-                    request.requestMatchers("/user/auth/social", "/user/auth/social/callback").permitAll();
+                    request.requestMatchers("/register/admin").hasRole("ADMIN");
+                    request.requestMatchers("/user/auth/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/product").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/category").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/collection").permitAll();
-                    request.requestMatchers(HttpMethod.GET, "/cart/**").permitAll();
-                    request.requestMatchers(HttpMethod.POST, "/cart/**").permitAll(); // TODO remove on Production
+
+                    request.requestMatchers(HttpMethod.GET, "/cart/**").hasRole("USER");
+                    request.requestMatchers(HttpMethod.POST, "/cart/**").hasRole("USER");
+
+                    request.requestMatchers(HttpMethod.POST, "/product", "/product/add").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.PUT, "/product").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.DELETE, "/product").hasRole("ADMIN");

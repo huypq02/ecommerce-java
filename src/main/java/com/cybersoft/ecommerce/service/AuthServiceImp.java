@@ -48,10 +48,12 @@ public class AuthServiceImp implements AuthService {
     private String authUri;
     @Value("${spring.security.oauth2.client.registration.facebook.token-uri}")
     private String tokenUri;
-//    @Value("${spring.security.oauth2.client.registration.facebook.scope}")
-//    private String scope;
+    @Value("${spring.security.oauth2.client.registration.facebook.scope}")
+    private String facebookScope;
     @Value("${spring.security.oauth2.client.registration.facebook.user-info-uri}")
     private String facebookUserInfoUri;
+    @Value("${spring.security.oauth2.client.registration.facebook.response-type}")
+    private String responseType;
 
     // Oauth2 Google
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
@@ -113,7 +115,7 @@ public class AuthServiceImp implements AuthService {
         loginType = loginType.toLowerCase();
         switch (loginType) {
             case "facebook":
-                url = authUri + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&scope=email" + "&response_type=code" + "&loginType=" + loginType;
+                url = authUri + "?client_id=" + clientId + "&redirect_uri=" + redirectUri + "&scope=" + facebookScope + "&response_type=" + responseType + "&loginType=" + loginType;
                 break;
             case "google":
                 url = googleAuthUri + "?client_id=" + googleClientId + "&redirect_uri=" + googleRedirectUri + "&scope=email" + "&response_type=code" + "&loginType=" + loginType;

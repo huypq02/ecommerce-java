@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Map;
 
 @Component
 public class JwtHelper {
@@ -36,8 +37,10 @@ public class JwtHelper {
         String data = null;
 
         try {
-            data = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().toString();
-            System.out.println(data);
+            Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+            Map<String, Object> roleInfo = (Map<String, Object>) claims.get("roleInfo");
+            System.out.println(roleInfo.get("role"));
+            data = roleInfo.get("role").toString();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,13 +8,19 @@ import com.cybersoft.ecommerce.repository.UserRepository;
 import com.cybersoft.ecommerce.request.OrderDetailRequest;
 import com.cybersoft.ecommerce.request.OrderRequest;
 import com.cybersoft.ecommerce.request.OrderStatusHistoryRequest;
+<<<<<<< HEAD
 import com.cybersoft.ecommerce.utils.JwtHelper;
+=======
+>>>>>>> develop
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+<<<<<<< HEAD
 import jakarta.transaction.Transactional;
+=======
+>>>>>>> develop
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,11 +48,18 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     private HttpServletRequest request;
 
+<<<<<<< HEAD
     @Autowired
     private JwtHelper jwtHelper;
 
     @Override
     @Transactional
+=======
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Override
+>>>>>>> develop
     public void addOrder(OrderRequest orderRequest) {
 
         try {
@@ -55,8 +68,20 @@ public class OrderServiceImp implements OrderService {
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 throw new RuntimeException("Missing or invalid Authorization header");
             }
+<<<<<<< HEAD
             String token = authorizationHeader.substring(7);
             Claims claims = jwtHelper.getClaims(token);
+=======
+
+            String token = authorizationHeader.substring(7);
+            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+>>>>>>> develop
             int userId = claims.get("userId", Integer.class);
 
             // Step 2: Save this user info to order
