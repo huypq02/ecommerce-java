@@ -1,5 +1,6 @@
 package com.cybersoft.ecommerce.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -41,5 +42,18 @@ public class JwtHelper {
             e.printStackTrace();
         }
         return data;
+    }
+
+    public Claims getClaims(String token){
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        Claims claims = null;
+
+        try {
+            claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Token is invalid");
+        }
+        return claims;
     }
 }

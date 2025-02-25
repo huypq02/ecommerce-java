@@ -4,10 +4,18 @@ import com.cybersoft.ecommerce.dto.CartDTO;
 import com.cybersoft.ecommerce.entity.*;
 import com.cybersoft.ecommerce.repository.*;
 import com.cybersoft.ecommerce.request.CartRequest;
+import com.cybersoft.ecommerce.utils.JwtHelper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class CartServiceImp implements CartService {
     @Autowired
-    private UserInfoRepository userInfoRepository;
+    private UserRepository userRepository;
     @Autowired
     private CartRepository cartRepository;
     @Autowired
@@ -27,18 +35,28 @@ public class CartServiceImp implements CartService {
     private ProductDetailRepository productDetailRepository;
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private JwtHelper jwtHelper;
 
     @Override
-
-
     @Transactional
     public void addToCart(CartRequest cartRequest) {
         if (cartRequest.getQuantity() <= 0) {
             throw new IllegalArgumentException("Số lượng sản phẩm phải lớn hơn 0.");
         }
-        Optional<CartEntity> cartOptional = cartRepository.findById(cartRequest.getCartID());
+        // Step 1: Get user info from token by parsing JWT
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Missing or invalid Authorization header");
+        }
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtHelper.getClaims(token);
+        int userId = claims.get("userId", Integer.class);
         // Nếu giỏ hàng chưa tồn tại, tạo giỏ hàng mới
-        CartEntity cart = cartOptional.orElseGet(() -> createCart(cartRequest.getUserID()));
+        Optional<CartEntity> cartOptional = cartRepository.findCartByUserID(userRepository.findById(userId).get());
+        CartEntity cart = cartOptional.orElseGet(() -> createCart(userId));
 
         // Kiểm tra sản phẩm có trong giỏ hàng chưa
         ProductEntity product = productRepository.findById(cartRequest.getProductID())
@@ -69,10 +87,7 @@ public class CartServiceImp implements CartService {
     private CartEntity createCart(int userID) {
         CartEntity cart = new CartEntity();
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userID);
-
-        cart.setUserID(userEntity);
+        cart.setUserID(userRepository.findById(userID).get());
         return cartRepository.save(cart);
     }
 
