@@ -4,14 +4,12 @@ package com.cybersoft.ecommerce.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-=======
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
 
->>>>>>> 9849228 (feat: order)
 @Data
 @Entity(name = "user_info")
 public class UserInfoEntity {
