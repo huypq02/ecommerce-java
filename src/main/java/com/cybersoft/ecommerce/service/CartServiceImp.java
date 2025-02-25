@@ -92,8 +92,17 @@ public class CartServiceImp implements CartService {
     }
 
     @Override
-    public List<CartDTO> getAllCarts(CartRequest cartRequest) {
-        CartEntity cart = cartRepository.findById(cartRequest.getCartID()) .orElseThrow(() -> new RuntimeException("Cart not found!"));
+    public List<CartDTO> getAllCarts() {
+        // Step 1: Get user info from token by parsing JWT
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Missing or invalid Authorization header");
+        }
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtHelper.getClaims(token);
+        int userId = claims.get("userId", Integer.class);
+
+        CartEntity cart = cartRepository.findCartByUserID(userRepository.findById(userId).get()) .orElseThrow(() -> new RuntimeException("Cart not found!"));
         List<CartDetailEntity> cartDetails = cartDetailRepository.findByCartDetailID(cart);
         List<CartDTO> cartDTOList = new ArrayList<>();
         for (CartDetailEntity cartDetailEntity : cartDetails) {
@@ -108,7 +117,7 @@ public class CartServiceImp implements CartService {
                 cartDTO.setPrice(productDetail.getPrice());
                 List<String> imageUrls = productDetail.getImageEntityList()// Lấy danh sách ảnh từ ProductDetailEntity
                         .stream()
-                        .map(ImageEntity::getUrlName)// Lấy URL của ảnh
+                        .map(imageEntity -> "http://localhost:8080/download/" + imageEntity.getUrlName())// Lấy URL của ảnh
                         .collect(Collectors.toList());
                 cartDTO.setImageUrls(imageUrls); // Gán danh sách ảnh vào DTO
 
