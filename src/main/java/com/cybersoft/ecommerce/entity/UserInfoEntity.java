@@ -1,6 +1,5 @@
 package com.cybersoft.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 

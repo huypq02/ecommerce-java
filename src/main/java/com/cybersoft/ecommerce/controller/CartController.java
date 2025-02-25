@@ -1,0 +1,51 @@
+package com.cybersoft.ecommerce.controller;
+
+import com.cybersoft.ecommerce.dto.CartDTO;
+import com.cybersoft.ecommerce.request.CartRequest;
+import com.cybersoft.ecommerce.response.BaseResponse;
+import com.cybersoft.ecommerce.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/cart")
+public class CartController {
+    @Autowired
+    private CartService cartService;
+    @PostMapping("/add")
+    public ResponseEntity<?> addToCart(@RequestBody CartRequest cartRequest) {
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            cartService.addToCart(cartRequest);
+            baseResponse.setCode(200);
+            baseResponse.setMessage("Successfully added to cart");
+            return ResponseEntity.ok(baseResponse);
+        } catch (Exception e) {
+            baseResponse.setCode(500);
+            baseResponse.setMessage("Failed to add to cart: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(baseResponse);
+        }
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getAllCart(@RequestParam int cartID) {
+        BaseResponse baseResponse = new BaseResponse();
+
+        // Tạo request object
+        CartRequest cartRequest = new CartRequest();
+        cartRequest.setCartID(cartID);
+
+        List<CartDTO> cartDTOList = cartService.getAllCarts(cartRequest);
+
+        baseResponse.setCode(200);
+        baseResponse.setMessage("Successfully");
+        baseResponse.setData(cartDTOList);
+
+        return ResponseEntity.ok(baseResponse);
+    }
+}
