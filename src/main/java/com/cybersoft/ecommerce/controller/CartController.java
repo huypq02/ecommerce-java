@@ -33,14 +33,10 @@ public class CartController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getAllCart(@RequestParam int cartID) {
+    public ResponseEntity<?> getAllCartByUserId() {
         BaseResponse baseResponse = new BaseResponse();
 
-        // Tạo request object
-        CartRequest cartRequest = new CartRequest();
-        cartRequest.setCartID(cartID);
-
-        List<CartDTO> cartDTOList = cartService.getAllCarts(cartRequest);
+        List<CartDTO> cartDTOList = cartService.getAllCarts();
 
         baseResponse.setCode(200);
         baseResponse.setMessage("Successfully");
