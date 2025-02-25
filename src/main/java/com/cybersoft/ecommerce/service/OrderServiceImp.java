@@ -8,11 +8,13 @@ import com.cybersoft.ecommerce.repository.UserRepository;
 import com.cybersoft.ecommerce.request.OrderDetailRequest;
 import com.cybersoft.ecommerce.request.OrderRequest;
 import com.cybersoft.ecommerce.request.OrderStatusHistoryRequest;
+import com.cybersoft.ecommerce.utils.JwtHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,10 +45,11 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     private HttpServletRequest request;
 
-    @Value("${jwt.secret}")
-    private String secret;
+    @Autowired
+    private JwtHelper jwtHelper;
 
     @Override
+    @Transactional
     public void addOrder(OrderRequest orderRequest) {
 
         try {
@@ -55,15 +58,8 @@ public class OrderServiceImp implements OrderService {
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 throw new RuntimeException("Missing or invalid Authorization header");
             }
-
             String token = authorizationHeader.substring(7);
-            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-            Claims claims = Jwts.parser()
-                    .verifyWith(key)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-
+            Claims claims = jwtHelper.getClaims(token);
             int userId = claims.get("userId", Integer.class);
 
             // Step 2: Save this user info to order
