@@ -155,11 +155,7 @@ create table if not exists orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     date DATE NOT NULL,
-<<<<<<< HEAD
-    payment_method ENUM('Cash', 'Card', 'Online') NOT NULL,
-=======
     payment_method varchar(20) NOT NULL,
->>>>>>> develop
     status ENUM('Pending', 'Completed', 'Cancelled') NOT NULL,
     full_name VARCHAR (255) NOT NULL,
     address VARCHAR (255) NOT NULL,
@@ -169,11 +165,7 @@ create table if not exists orders (
     country VARCHAR (50) NOT NULL,
     province VARCHAR (50) NOT NULL,
     apt VARCHAR (50),
-<<<<<<< HEAD
-    transaction_id VARCHAR (50)
-=======
     transaction_id VARCHAR (50),
->>>>>>> develop
     shipping_fee DOUBLE NOT NULL,
     tax DOUBLE NOT NULL,
     discount DOUBLE NOT NULL,
