@@ -24,7 +24,6 @@ public class UserEntity {
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
-    @OneToMany(mappedBy = "userID")
-    private List<CartEntity> cartEntityList;
-
+//    @OneToMany(mappedBy = "userID")
+//    private List<CartEntity> cartEntityList;
 }
