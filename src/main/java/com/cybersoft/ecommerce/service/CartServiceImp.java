@@ -115,6 +115,8 @@ public class CartServiceImp implements CartService {
                 cartDTO.setQuantity(cartDetailEntity.getQuantity());
                 cartDTO.setSize(productDetail.getSize());
                 cartDTO.setPrice(productDetail.getPrice());
+                cartDTO.setColor(productDetail.getColor());
+                cartDTO.setProductDetailId(productDetail.getId());
                 List<String> imageUrls = productDetail.getImageEntityList()// Lấy danh sách ảnh từ ProductDetailEntity
                         .stream()
                         .map(imageEntity -> "http://localhost:8080/download/" + imageEntity.getUrlName())// Lấy URL của ảnh
