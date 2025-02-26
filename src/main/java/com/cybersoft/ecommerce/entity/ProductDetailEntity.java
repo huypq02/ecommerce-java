@@ -26,4 +26,7 @@ public class ProductDetailEntity {
 
     @OneToMany(mappedBy = "productDetailEntity")
     private List<ImageEntity> imageEntityList;
+
+    @OneToMany(mappedBy = "cartProductDetailID")
+    private List<CartDetailEntity> cartDetailEntityList;
 }

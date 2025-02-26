@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class CartDTO {
+    private int productId;
     private int productDetailId;
     private String productName;
     private int quantity;
