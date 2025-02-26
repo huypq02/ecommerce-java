@@ -50,6 +50,9 @@ public class SecurityConfig {
                     request.requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.DELETE, "/users").hasRole("ADMIN");
 
+                    request.requestMatchers(HttpMethod.GET, "/account").hasAnyRole("ADMIN", "USER");
+                    request.requestMatchers(HttpMethod.POST, "/account").hasAnyRole("ADMIN", "USER");
+
                     request.anyRequest().authenticated();
                 })
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

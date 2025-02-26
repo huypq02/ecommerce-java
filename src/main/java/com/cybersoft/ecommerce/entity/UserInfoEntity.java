@@ -24,8 +24,4 @@ public class UserInfoEntity {
     private String phone;
     @Column(name = "description")
     private String description;
-
-    @OneToOne
-    @JoinColumn(name = "user_info_id")
-    private UserEntity user;
 }
