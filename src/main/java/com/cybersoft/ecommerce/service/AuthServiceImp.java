@@ -2,8 +2,10 @@ package com.cybersoft.ecommerce.service;
 
 import com.cybersoft.ecommerce.dto.UserDto;
 import com.cybersoft.ecommerce.entity.UserEntity;
+import com.cybersoft.ecommerce.entity.UserInfoEntity;
 import com.cybersoft.ecommerce.repository.AuthRepository;
 import com.cybersoft.ecommerce.repository.RoleRepository;
+import com.cybersoft.ecommerce.repository.UserInfoRepository;
 import com.cybersoft.ecommerce.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -33,6 +35,8 @@ public class AuthServiceImp implements AuthService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -161,11 +165,15 @@ public class AuthServiceImp implements AuthService {
 
         } else {
             // Sign up
+            //User-info
+            UserInfoEntity newUserInfo = userInfoRepository.save(new UserInfoEntity());
+
             UserEntity newUser = new UserEntity();
             // Set default role for new user
             newUser.setEmail(userDto.getEmail());
             newUser.setOauthId(userDto.getOauthId());
             newUser.setRole(roleRepository.findById(roleId).get());
+            newUser.setUserInfo(newUserInfo);
             userRepository.save(newUser);
 
             // Set issued at and expiration times
