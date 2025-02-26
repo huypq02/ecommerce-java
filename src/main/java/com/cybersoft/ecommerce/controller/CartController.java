@@ -44,4 +44,19 @@ public class CartController {
 
         return ResponseEntity.ok(baseResponse);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCart(@PathVariable int id) {
+        BaseResponse baseResponse = new BaseResponse();
+        try {
+            cartService.deleteCart(id);
+            baseResponse.setCode(200);
+            baseResponse.setMessage("Successfully deleted cart");
+            return ResponseEntity.ok(baseResponse);
+        } catch (Exception e) {
+            baseResponse.setCode(500);
+            baseResponse.setMessage("Failed to delete cart: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(baseResponse);
+        }
+    }
 }

@@ -38,6 +38,7 @@ public class SecurityConfig {
 
                     request.requestMatchers(HttpMethod.GET, "/cart/**").hasAnyRole("ADMIN", "USER");
                     request.requestMatchers(HttpMethod.POST, "/cart/**").hasAnyRole("ADMIN", "USER");
+                    request.requestMatchers(HttpMethod.DELETE, "/cart/**").hasAnyRole("ADMIN", "USER");
 
                     request.requestMatchers(HttpMethod.POST, "/product/**").hasRole("ADMIN");
                     request.requestMatchers(HttpMethod.PUT, "/product").hasRole("ADMIN");

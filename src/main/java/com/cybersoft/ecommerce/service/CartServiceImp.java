@@ -30,8 +30,6 @@ public class CartServiceImp implements CartService {
     @Autowired
     private CartDetailRepository cartDetailRepository;
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
     private ProductDetailRepository productDetailRepository;
     @Autowired
     private ImageRepository imageRepository;
@@ -59,12 +57,12 @@ public class CartServiceImp implements CartService {
         CartEntity cart = cartOptional.orElseGet(() -> createCart(userId));
 
         // Kiểm tra sản phẩm có trong giỏ hàng chưa
-        ProductEntity product = productRepository.findById(cartRequest.getProductID())
+        ProductDetailEntity productDetail = productDetailRepository.findById(cartRequest.getProductDetailID())
                 .orElseThrow(() -> new RuntimeException("Product not found!"));
 
 
         // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        Optional<CartDetailEntity> existingCartDetail = cartDetailRepository.findByCartDetailIDAndCartProductID(cart, product);
+        Optional<CartDetailEntity> existingCartDetail = cartDetailRepository.findByCartDetailIDAndCartProductDetailID(cart, productDetail);
 
         if (existingCartDetail.isPresent()) {
             // Nếu sản phẩm đã có, cập nhật số lượng
@@ -74,11 +72,11 @@ public class CartServiceImp implements CartService {
         } else {
             // Nếu chưa có, thêm mới sản phẩm vào giỏ hàng
             ProductEntity productEntity = new ProductEntity();
-            productEntity.setId(cartRequest.getProductID());
+            productEntity.setId(cartRequest.getProductDetailID());
 
             CartDetailEntity cartDetail = new CartDetailEntity();
             cartDetail.setCartDetailID(cart);
-            cartDetail.setCartProductID(product);
+            cartDetail.setCartProductDetailID(productDetail);
             cartDetail.setQuantity(cartRequest.getQuantity());
             cartDetailRepository.save(cartDetail);
         }
@@ -106,11 +104,12 @@ public class CartServiceImp implements CartService {
         List<CartDetailEntity> cartDetails = cartDetailRepository.findByCartDetailID(cart);
         List<CartDTO> cartDTOList = new ArrayList<>();
         for (CartDetailEntity cartDetailEntity : cartDetails) {
-            ProductEntity product = cartDetailEntity.getCartProductID();
+            ProductEntity product = cartDetailEntity.getCartProductDetailID().getProductEntity();
             List<ProductDetailEntity> productDetails = product.getDetailEntityList();
             if(!productDetails.isEmpty()){
                 ProductDetailEntity productDetail = productDetails.get(0); // Lấy product detail đầu tiên
                 CartDTO cartDTO = new CartDTO();
+                cartDTO.setProductId(product.getId());
                 cartDTO.setProductName(product.getName());
                 cartDTO.setQuantity(cartDetailEntity.getQuantity());
                 cartDTO.setSize(productDetail.getSize());
@@ -128,5 +127,23 @@ public class CartServiceImp implements CartService {
 
         }
         return cartDTOList;
+    }
+
+    @Override
+    @Transactional
+    public void deleteCart(int productDetailId) {
+        // Step 1: Get user info from token by parsing JWT
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Missing or invalid Authorization header");
+        }
+        String token = authorizationHeader.substring(7);
+        Claims claims = jwtHelper.getClaims(token);
+        int userId = claims.get("userId", Integer.class);
+
+        CartEntity cart = cartRepository.findCartByUserID(userRepository.findById(userId).get()).orElseThrow(() -> new RuntimeException("Cart not found!"));
+        ProductDetailEntity productDetail = productDetailRepository.findById(productDetailId).orElseThrow(() -> new RuntimeException("Product detail not found!"));
+        CartDetailEntity cartDetail = cartDetailRepository.findByCartDetailIDAndCartProductDetailID(cart, productDetail).orElseThrow(() -> new RuntimeException("Cart detail not found!"));
+        cartDetailRepository.delete(cartDetail);
     }
 }

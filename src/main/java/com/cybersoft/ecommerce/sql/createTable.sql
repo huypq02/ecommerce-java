@@ -133,7 +133,7 @@ ON UPDATE CASCADE;
 create table if not exists cart_detail (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cart_id INT NOT NULL,
-    product_id INT NOT NULL,
+    product_detail_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0)
 );
 
@@ -145,9 +145,9 @@ ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 ALTER TABLE cart_detail
-ADD CONSTRAINT FK_product_id
-FOREIGN KEY (product_id)
-REFERENCES product(id)
+ADD CONSTRAINT FK_product_detail_id
+FOREIGN KEY (product_detail_id)
+REFERENCES product_detail(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
