@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class CartDTO {
-    private int productDetailId;git
+    private int productDetailId;
     private String productName;
     private int quantity;
     private String size;
