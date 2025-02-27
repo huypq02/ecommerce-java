@@ -26,7 +26,8 @@ public class OrderDetailEntity {
     private String color;
     @Column(name = "size")
     private String size;
-//    @ManyToOne
-//    @JoinColumn(name = "product_detail_id")
-//    private ProductDetailEntity productDetail;
+
+    @ManyToOne
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetailEntity orderProductDetail;
 }
