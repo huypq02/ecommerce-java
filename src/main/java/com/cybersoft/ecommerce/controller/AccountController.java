@@ -28,16 +28,18 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<?> updateAccount(@RequestBody AccountRequest accountRequest)
+    public ResponseEntity<?> updateAccount(AccountRequest accountRequest)
     {
         BaseResponse baseResponse = new BaseResponse();
         if (accountService.updateUser(accountRequest)) {
             baseResponse.setMessage("Success");
+            UserEntity user = accountService.getUserByAuthorToken();
+            baseResponse.setData(user);
         } else {
             baseResponse.setMessage("Error");
+            baseResponse.setData("");
         }
         baseResponse.setCode(200);
-        baseResponse.setData(accountRequest);
 
         return ResponseEntity.ok(baseResponse);
     }

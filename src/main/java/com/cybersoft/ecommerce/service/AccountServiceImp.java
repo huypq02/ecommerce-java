@@ -1,7 +1,9 @@
 package com.cybersoft.ecommerce.service;
 
+import com.cybersoft.ecommerce.entity.ImageEntity;
 import com.cybersoft.ecommerce.entity.UserEntity;
 import com.cybersoft.ecommerce.entity.UserInfoEntity;
+import com.cybersoft.ecommerce.repository.ImageRepository;
 import com.cybersoft.ecommerce.repository.RoleRepository;
 import com.cybersoft.ecommerce.repository.UserInfoRepository;
 import com.cybersoft.ecommerce.repository.UserRepository;
@@ -11,6 +13,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -27,6 +30,10 @@ public class AccountServiceImp implements AccountService {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private FileService fileService;
+    @Autowired
+    private ImageRepository imageRepository;
 
     private static final int USER_ROLE_ID = 2;
 
@@ -74,6 +81,13 @@ public class AccountServiceImp implements AccountService {
                 return result;
             }
 
+            //Save image
+            MultipartFile file = accountRequest.getImage();
+            String fileName = "";
+            if (file != null && !file.isEmpty()) {
+                fileName = fileService.uploadFile(file);
+            }
+
             //Save user-info
             Optional<UserEntity> existUser = userRepository.findById(userId);
             UserEntity userEntity = existUser.get();
@@ -87,6 +101,9 @@ public class AccountServiceImp implements AccountService {
             userInfo.setAddress(accountRequest.getAddress());
             userInfo.setPhone(accountRequest.getPhone());
             userInfo.setDescription(accountRequest.getDescription());
+            if (!fileName.equals("")) {
+                userInfo.setImage(fileName);
+            }
 
             UserInfoEntity savedUserInfo = userInfoRepository.save(userInfo);
 
