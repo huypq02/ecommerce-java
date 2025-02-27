@@ -1,10 +1,7 @@
 package com.cybersoft.ecommerce.service;
 
 import com.cybersoft.ecommerce.entity.*;
-import com.cybersoft.ecommerce.repository.OrderDetailRepository;
-import com.cybersoft.ecommerce.repository.OrderRepository;
-import com.cybersoft.ecommerce.repository.OrderStatusHistoryRepository;
-import com.cybersoft.ecommerce.repository.UserRepository;
+import com.cybersoft.ecommerce.repository.*;
 import com.cybersoft.ecommerce.request.OrderDetailRequest;
 import com.cybersoft.ecommerce.request.OrderRequest;
 import com.cybersoft.ecommerce.request.OrderStatusHistoryRequest;
@@ -31,6 +28,9 @@ public class OrderServiceImp implements OrderService {
     private OrderStatusHistoryRepository orderStatusHistoryRepository;
 
     @Autowired
+    private ProductDetailRepository productDetailRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -55,7 +55,7 @@ public class OrderServiceImp implements OrderService {
 
             // Step 2: Save this user info to order
             OrderEntity order = new OrderEntity();
-            order.setUser(userRepository.findById(userId).get());
+            order.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
             // convert string to date
             Date now = new Date();
             Date orderDate = convertStringToDate(orderRequest.getDate());
@@ -84,9 +84,10 @@ public class OrderServiceImp implements OrderService {
                 OrderDetailEntity orderDetail = new OrderDetailEntity();
                 orderDetail.setOrder(order);
                 orderDetail.setQuantity(orderDetailRequest.getQuantity());
-                orderDetail.setPresentUnitPrice(orderDetailRequest.getPrice());
+                orderDetail.setPresentUnitPrice(orderDetailRequest.getPresentUnitPrice());
                 orderDetail.setColor(orderDetailRequest.getColor());
                 orderDetail.setSize(orderDetailRequest.getSize());
+                orderDetail.setOrderProductDetail(productDetailRepository.findById(orderDetailRequest.getProductDetailId()).orElseThrow(() -> new RuntimeException("Product detail not found")));
                 orderDetailRepository.save(orderDetail);
             }
 
