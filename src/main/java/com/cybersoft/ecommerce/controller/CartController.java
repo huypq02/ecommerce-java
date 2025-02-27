@@ -4,6 +4,7 @@ import com.cybersoft.ecommerce.dto.CartDTO;
 import com.cybersoft.ecommerce.request.CartRequest;
 import com.cybersoft.ecommerce.response.BaseResponse;
 import com.cybersoft.ecommerce.service.CartService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,19 @@ public class CartController {
             baseResponse.setCode(500);
             baseResponse.setMessage("Failed to delete cart: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(baseResponse);
+        }
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteCartByUserId() {
+        try {
+            boolean isDeleted = cartService.deleteCartByUserId();
+            if (isDeleted) {
+                return ResponseEntity.ok("Cart deleted successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found!");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

@@ -100,13 +100,13 @@ public class CartServiceImp implements CartService {
         Claims claims = jwtHelper.getClaims(token);
         int userId = claims.get("userId", Integer.class);
 
-        CartEntity cart = cartRepository.findCartByUserID(userRepository.findById(userId).get()) .orElseThrow(() -> new RuntimeException("Cart not found!"));
+        CartEntity cart = cartRepository.findCartByUserID(userRepository.findById(userId).get()).orElseThrow(() -> new RuntimeException("Cart not found!"));
         List<CartDetailEntity> cartDetails = cartDetailRepository.findByCartDetailID(cart);
         List<CartDTO> cartDTOList = new ArrayList<>();
         for (CartDetailEntity cartDetailEntity : cartDetails) {
             ProductEntity product = cartDetailEntity.getCartProductDetailID().getProductEntity();
             List<ProductDetailEntity> productDetails = product.getDetailEntityList();
-            if(!productDetails.isEmpty()){
+            if (!productDetails.isEmpty()) {
                 ProductDetailEntity productDetail = productDetails.get(0); // Lấy product detail đầu tiên
                 CartDTO cartDTO = new CartDTO();
                 cartDTO.setProductId(product.getId());
@@ -145,5 +145,36 @@ public class CartServiceImp implements CartService {
         ProductDetailEntity productDetail = productDetailRepository.findById(productDetailId).orElseThrow(() -> new RuntimeException("Product detail not found!"));
         CartDetailEntity cartDetail = cartDetailRepository.findByCartDetailIDAndCartProductDetailID(cart, productDetail).orElseThrow(() -> new RuntimeException("Cart detail not found!"));
         cartDetailRepository.delete(cartDetail);
+    }
+
+    public boolean deleteCartByUserId() {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Missing or invalid Authorization header");
+        }
+
+        String token = authorizationHeader.substring(7).trim();
+
+        if (token.isEmpty() || token.contains(" ")) {
+            throw new RuntimeException("Invalid JWT token format");
+        }
+
+        Claims claims = jwtHelper.getClaims(token);
+        int userId = claims.get("userId", Integer.class);
+
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new RuntimeException("User not found!");
+        }
+
+        UserEntity user = userOptional.get();
+        Optional<CartEntity> cartOptional = cartRepository.findCartByUserID(user);
+
+        if (!cartOptional.isPresent()) {
+            throw new RuntimeException("Cart not found!");
+        }
+
+        cartRepository.deleteByUserID(user);
+        return true;
     }
 }
