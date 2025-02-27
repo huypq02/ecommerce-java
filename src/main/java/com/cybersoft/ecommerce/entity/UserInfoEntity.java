@@ -24,4 +24,6 @@ public class UserInfoEntity {
     private String phone;
     @Column(name = "description")
     private String description;
+    @Column(name="image")
+    private String image;
 }

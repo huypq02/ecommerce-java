@@ -1,6 +1,7 @@
 package com.cybersoft.ecommerce.request;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class AccountRequest {
@@ -13,4 +14,5 @@ public class AccountRequest {
     private String address;
     private String phone;
     private String description;
+    private MultipartFile image;
 }
