@@ -30,29 +30,29 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> {
                     // giúp định nghĩa quyền truy cập cho các link
                     request.requestMatchers("/login", "/register", "/download/**").permitAll();
-                    request.requestMatchers("/register/admin").hasRole("ADMIN");
                     request.requestMatchers("/user/auth/**").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/product").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/category").permitAll();
                     request.requestMatchers(HttpMethod.GET, "/collection").permitAll();
+                    request.requestMatchers(HttpMethod.POST, "/register/admin", "/register/staff").hasRole("ADMIN");
 
-                    request.requestMatchers(HttpMethod.GET, "/cart/**").hasAnyRole("ADMIN", "USER");
-                    request.requestMatchers(HttpMethod.POST, "/cart/**").hasAnyRole("ADMIN", "USER");
-                    request.requestMatchers(HttpMethod.DELETE, "/cart/**").hasAnyRole("ADMIN", "USER");
+                    request.requestMatchers(HttpMethod.GET, "/cart/**").hasAnyRole("ADMIN", "STAFF", "USER");
+                    request.requestMatchers(HttpMethod.POST, "/cart/**").hasAnyRole("ADMIN","STAFF", "USER");
+                    request.requestMatchers(HttpMethod.DELETE, "/cart/**").hasAnyRole("ADMIN","STAFF", "USER");
 
-                    request.requestMatchers(HttpMethod.POST, "/product/**").hasRole("ADMIN");
-                    request.requestMatchers(HttpMethod.PUT, "/product").hasRole("ADMIN");
-                    request.requestMatchers(HttpMethod.DELETE, "/product").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.POST, "/product/**").hasAnyRole("ADMIN","STAFF");
+                    request.requestMatchers(HttpMethod.PUT, "/product").hasAnyRole("ADMIN", "STAFF");
+                    request.requestMatchers(HttpMethod.DELETE, "/product").hasAnyRole("ADMIN", "STAFF");
 
-                    request.requestMatchers(HttpMethod.POST, "/category").hasRole("ADMIN");
-                    request.requestMatchers(HttpMethod.PUT, "/category").hasRole("ADMIN");
-                    request.requestMatchers(HttpMethod.DELETE, "/category").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.POST, "/category").hasAnyRole("ADMIN", "STAFF");
+                    request.requestMatchers(HttpMethod.PUT, "/category").hasAnyRole("ADMIN", "STAFF");
+                    request.requestMatchers(HttpMethod.DELETE, "/category").hasAnyRole("ADMIN", "STAFF");
 
-                    request.requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN");
-                    request.requestMatchers(HttpMethod.DELETE, "/users").hasRole("ADMIN");
+                    request.requestMatchers(HttpMethod.GET, "/users").hasAnyRole("ADMIN", "STAFF");
+                    request.requestMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN");
 
-                    request.requestMatchers(HttpMethod.GET, "/account").hasAnyRole("ADMIN", "USER");
-                    request.requestMatchers(HttpMethod.POST, "/account").hasAnyRole("ADMIN", "USER");
+                    request.requestMatchers(HttpMethod.GET, "/account").hasAnyRole("ADMIN", "STAFF", "USER");
+                    request.requestMatchers(HttpMethod.POST, "/account").hasAnyRole("ADMIN", "STAFF", "USER");
 
                     request.anyRequest().authenticated();
                 })
