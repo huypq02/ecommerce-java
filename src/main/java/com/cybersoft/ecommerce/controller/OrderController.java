@@ -17,12 +17,16 @@ public class OrderController {
     @PostMapping()
     public ResponseEntity<?> order(@RequestBody OrderRequest order) {
         try{
-
             orderService.addOrder(order);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Order failed");
         }
 
         return ResponseEntity.ok("Order success");
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getAllOrder() {
+        return ResponseEntity.ok(orderService.getAllOrder());
     }
 }

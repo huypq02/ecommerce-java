@@ -43,8 +43,8 @@ public class RegisterController {
 
     @PostMapping("/staff")
     public ResponseEntity<?> registerStaff(@RequestBody RegisterRequest request) {
-
-        registerService.register(request, STAFF_ROLE);
+        String role = request.role();
+        registerService.register(request, role);
 
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setCode(200);
