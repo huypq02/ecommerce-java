@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class OrderRequest {
+    private int id;
     private List<OrderDetailRequest> orderDetail;
     private List<OrderStatusHistoryRequest> orderStatusHistory;
     private String fullName;

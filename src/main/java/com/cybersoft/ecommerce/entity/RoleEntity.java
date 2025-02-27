@@ -15,4 +15,7 @@ public class RoleEntity {
 
     @Column(name = "role")
     private String role;
+
+    @Column(name = "name")
+    private String name;
 }

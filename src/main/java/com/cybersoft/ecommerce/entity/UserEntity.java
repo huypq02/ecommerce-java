@@ -27,7 +27,7 @@ public class UserEntity {
 //    @OneToMany(mappedBy = "userID")
 //    private List<CartEntity> cartEntityList;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "user_info_id")
     private UserInfoEntity userInfo;
 }

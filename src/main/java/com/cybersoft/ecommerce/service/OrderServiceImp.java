@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.cybersoft.ecommerce.utils.DateUtil.convertStringToDate;
 
@@ -105,5 +106,35 @@ public class OrderServiceImp implements OrderService {
         catch (Exception e) {
             throw new RuntimeException("Order failed");
         }
+    }
+
+    @Override
+    public List<OrderRequest> getAllOrder() {
+        try{
+            return orderRepository.findAll().stream().map(order -> {
+                OrderRequest orderRequest = new OrderRequest();
+                orderRequest.setId(order.getId());
+                orderRequest.setDate(order.getDate().toString());
+                orderRequest.setPaymentMethod(order.getPaymentMethod());
+                orderRequest.setStatus(order.getStatus());
+                orderRequest.setFullName(order.getFullName());
+                orderRequest.setPhone(order.getPhone());
+                orderRequest.setAddress(order.getAddress());
+                orderRequest.setPostalCode(order.getPostalCode());
+                orderRequest.setCity(order.getCity());
+                orderRequest.setCountry(order.getCountry());
+                orderRequest.setProvince(order.getProvince());
+                orderRequest.setApt(order.getApt());
+                orderRequest.setTransactionId(order.getTransactionId());
+                orderRequest.setShippingFee(order.getShippingFee());
+                orderRequest.setTax(order.getTax());
+                orderRequest.setDiscount(order.getDiscount());
+                orderRequest.setTotal(order.getTotal());
+                return orderRequest;
+            }).toList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
