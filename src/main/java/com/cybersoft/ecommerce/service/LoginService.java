@@ -31,7 +31,6 @@ public class LoginService {
         String token = "";
 
         Optional<UserEntity> user = userRepository.findByEmail(email);
-        System.out.println(user);
         if (user.isPresent()) {
             UserEntity userEntity = user.get();
             // Set issued at and expiration times
@@ -52,7 +51,6 @@ public class LoginService {
                         .compact();
             }
         }
-        System.out.println(token);
         return token;
     }
 }

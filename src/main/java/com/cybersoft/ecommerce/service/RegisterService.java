@@ -22,17 +22,14 @@ public class RegisterService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void register(RegisterRequest request, int roleId) {
+    public void register(RegisterRequest request, String role) {
         try{
             String encodedPassword = passwordEncoder.encode(request.password());
 
             UserEntity user = new UserEntity();
             user.setEmail(request.email());
             user.setPassword(encodedPassword);
-            user.setRole(roleUserRepository.findById(roleId).get());
-
-            System.out.println("User: " + user);
-
+            user.setRole(roleUserRepository.findByRole(role).orElseThrow(() -> new InsertException("Role not found")));
             userRepository.save(user);
         } catch(Exception e) {
             throw new InsertException("Error while inserting user");
