@@ -58,4 +58,14 @@ public class ProductController {
         baseResponse.setData(productService.getAllProduct(pageSize,pageNumber));
         return baseResponse;
     }
+
+    @DeleteMapping("/{id}")
+    public BaseResponse deleteProduct(@PathVariable int id){
+        BaseResponse baseResponse = new BaseResponse();
+        productService.deleteProduct(id);
+        baseResponse.setCode(200);
+        baseResponse.setMessage("Success");
+        baseResponse.setData("Success");
+        return baseResponse;
+    }
 }

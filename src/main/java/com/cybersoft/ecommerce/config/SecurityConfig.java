@@ -44,7 +44,7 @@ public class SecurityConfig {
 
                     request.requestMatchers(HttpMethod.POST, "/product/**").hasAnyRole("ADMIN","STAFF");
                     request.requestMatchers(HttpMethod.PUT, "/product").hasAnyRole("ADMIN", "STAFF");
-                    request.requestMatchers(HttpMethod.DELETE, "/product").hasAnyRole("ADMIN", "STAFF");
+                    request.requestMatchers(HttpMethod.DELETE, "/product/**").hasAnyRole("ADMIN", "STAFF");
 
                     request.requestMatchers(HttpMethod.POST, "/category").hasAnyRole("ADMIN", "STAFF");
                     request.requestMatchers(HttpMethod.PUT, "/category").hasAnyRole("ADMIN", "STAFF");
@@ -52,7 +52,7 @@ public class SecurityConfig {
 
                     request.requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN", "STAFF");
                     request.requestMatchers(HttpMethod.PATCH, "/users/**").hasAnyRole("ADMIN");
-                    request.requestMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN");
+                    request.requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN");
 
                     request.requestMatchers(HttpMethod.GET, "/account").hasAnyRole("ADMIN", "STAFF", "USER");
                     request.requestMatchers(HttpMethod.POST, "/account").hasAnyRole("ADMIN", "STAFF", "USER");

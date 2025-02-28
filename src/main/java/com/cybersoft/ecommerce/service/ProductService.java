@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProductService {
     void insertProduct(ProductRequest productRequest, MultipartFile[] files);
     List<ProductDto> getAllProduct(int pageSize, int pageNumber);
+    void deleteProduct(int id);
 }
