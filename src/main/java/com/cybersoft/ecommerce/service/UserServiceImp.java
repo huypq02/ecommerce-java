@@ -11,6 +11,7 @@ import com.cybersoft.ecommerce.repository.UserInfoRepository;
 import com.cybersoft.ecommerce.repository.UserRepository;
 import com.cybersoft.ecommerce.request.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,9 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDto> getAllUser() {
@@ -76,7 +80,8 @@ public class UserServiceImp implements UserService {
                 userEntity.setEmail(userRequest.getEmail());
             }
             if (userRequest.getPassword() != null){
-                userEntity.setPassword(userRequest.getPassword());
+                String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
+                userEntity.setPassword(encodedPassword);
             }
             userEntity.setRole(roleRepository.findByRole(userRequest.getRole()).get()); // Set role
 

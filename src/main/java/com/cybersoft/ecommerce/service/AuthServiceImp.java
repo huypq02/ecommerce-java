@@ -193,9 +193,6 @@ public class AuthServiceImp implements AuthService {
                     .signWith(key)
                     .compact();
         }
-
-        System.out.println(token); // TODO remove this line in production
-
         return token;
     }
 }
