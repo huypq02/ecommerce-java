@@ -147,6 +147,8 @@ public class CartServiceImp implements CartService {
         cartDetailRepository.delete(cartDetail);
     }
 
+    @Override
+    @Transactional
     public boolean deleteCartByUserId() {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
