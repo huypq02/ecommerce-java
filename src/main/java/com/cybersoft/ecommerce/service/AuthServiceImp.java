@@ -130,7 +130,7 @@ public class AuthServiceImp implements AuthService {
     }
 
     @Override
-    public String loginOrSignup(Map<String, Object> user, int roleId) {
+    public String loginOrSignup(Map<String, Object> user, String role) {
         // login or sign up by oauth_id
         String token = "";
         UserDto userDto = new UserDto();
@@ -172,7 +172,7 @@ public class AuthServiceImp implements AuthService {
             // Set default role for new user
             newUser.setEmail(userDto.getEmail());
             newUser.setOauthId(userDto.getOauthId());
-            newUser.setRole(roleRepository.findById(roleId).get());
+            newUser.setRole(roleRepository.findByRole(role).get());
             newUser.setUserInfo(newUserInfo);
             userRepository.save(newUser);
 
