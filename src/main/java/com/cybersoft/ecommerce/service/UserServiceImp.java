@@ -10,7 +10,9 @@ import com.cybersoft.ecommerce.repository.RoleRepository;
 import com.cybersoft.ecommerce.repository.UserInfoRepository;
 import com.cybersoft.ecommerce.repository.UserRepository;
 import com.cybersoft.ecommerce.request.UserRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -91,5 +93,19 @@ public class UserServiceImp implements UserService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(int id) {
+        try {
+            UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            if (userEntity.getUserInfo() != null) {
+                userInfoRepository.deleteById(userEntity.getUserInfo().getId());
+            }
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Delete user failed: " + e.getMessage());
+        }
     }
 }

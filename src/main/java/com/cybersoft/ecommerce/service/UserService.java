@@ -9,4 +9,5 @@ import java.util.List;
 public interface UserService {
     List<UserDto> getAllUser();
     boolean updateUser(UserRequest userRequest);
+    void deleteUser(int id);
 }

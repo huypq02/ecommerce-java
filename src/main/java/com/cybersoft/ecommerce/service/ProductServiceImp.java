@@ -170,4 +170,32 @@ public class ProductServiceImp implements ProductService {
             return productDto;
         }).toList();
     }
+
+    @Override
+    public void deleteProduct(int productId) {
+        try {
+            ProductEntity product = productRepository
+                    .findById(productId)
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            // Get all product details
+            List<ProductDetailEntity> details = product.getDetailEntityList();
+
+            // For each product detail, delete its images first
+            for (ProductDetailEntity detail : details) {
+                // Delete all images associated with this product detail
+                for (ImageEntity image : detail.getImageEntityList()) {
+                    imageRepository.delete(image);
+                }
+
+                // Delete the product detail
+                productDetailRepository.delete(detail);
+            }
+
+            // Now that all child records are deleted, delete the product
+            productRepository.delete(product);
+        } catch (Exception e) {
+            throw new RuntimeException("Delete product failed: " + e.getMessage());
+        }
+    }
 }
