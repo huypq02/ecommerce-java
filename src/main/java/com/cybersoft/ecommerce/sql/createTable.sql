@@ -97,7 +97,8 @@ create table if not exists user_info (
 	birthday TIMESTAMP,
 	address VARCHAR (255),
 	phone VARCHAR (10),
-	description TEXT	
+	description TEXT,
+	image text
 );
 
 
@@ -213,5 +214,3 @@ ALTER TABLE order_status_history ADD CONSTRAINT FK_order_id_order_status_history
 FOREIGN KEY (order_id) REFERENCES orders(id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
-
-ALTER TABLE user_info ADD COLUMN (image text);

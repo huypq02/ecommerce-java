@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3308}/${MYSQL_DATABASE:ecommerce}
     username: ${MYSQL_USERNAME:root}
-    password: ${MYSQL_ROOT_PASSWORD:admin123}
+    password: ${MYSQL_ROOT_PASSWORD:xxxxxxxxxxxxx}
   jpa:
     hibernate:
       ddl-auto: none
@@ -14,8 +14,8 @@ spring:
       client:
         registration:
           facebook:
-            client-id: "${FACEBOOK_CLIENT_ID:}"
-            client-secret: "${FACEBOOK_CLIENT_SECRET:}"
+            client-id: "${FACEBOOK_CLIENT_ID:xxxxxxxxx}"
+            client-secret: "${FACEBOOK_CLIENT_SECRET:xxxxxxxxxxxx}"
             redirect-uri: "${FACEBOOK_REDIRECT_URI:http://localhost:3000/user/auth/social/callback}"
             auth-uri: "https://www.facebook.com/v11.0/dialog/oauth"
             token-uri: "https://graph.facebook.com/v11.0/oauth/access_token"
@@ -24,8 +24,8 @@ spring:
             response-type: code
 
           google:
-            client-id: "${GOOGLE_CLIENT_ID:}"
-            client-secret: "${GOOGLE_CLIENT_SECRET:}"
+            client-id: "${GOOGLE_CLIENT_ID:xxxxxxxxxx}"
+            client-secret: "${GOOGLE_CLIENT_SECRET:xxxxxxxxxxxx}"
             redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/social/callback/google}"
             auth-uri: "https://accounts.google.com/o/oauth2/v2/auth"
             token-uri: "https://www.googleapis.com/oauth2/v3/token"
