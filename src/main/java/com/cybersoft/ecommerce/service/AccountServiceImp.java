@@ -54,6 +54,15 @@ public class AccountServiceImp implements AccountService {
         Optional<UserEntity> existUser = userRepository.findById(userId);
         if (existUser.isPresent()) {
             userEntity = existUser.get();
+            UserInfoEntity userInfo = userEntity.getUserInfo();
+            if (userInfo != null) {
+                String birth = userInfo.getBirthday();
+                if (birth != null && birth.contains(" ")) {
+                    birth = birth.split(" ")[0];
+                    userInfo.setBirthday(birth);
+                    userEntity.setUserInfo(userInfo);
+                }
+            }
         } else {
             System.out.println("User with id: " + userId + " isnot exist!");
         }
