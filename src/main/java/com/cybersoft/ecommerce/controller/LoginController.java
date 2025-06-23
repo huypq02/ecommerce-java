@@ -14,10 +14,10 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<?> login(@RequestBody UserEntity user) {
         String token = loginService.login(user.getEmail(), user.getPassword());
-        System.out.println(token);
+        System.out.println(token); // TODO remove this line on production
         BaseResponse response = new BaseResponse();
         response.setData(token);
         response.setCode(200);

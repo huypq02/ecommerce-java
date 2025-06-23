@@ -13,10 +13,9 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "role")
+    private String role;
+
     @Column(name = "name")
     private String name;
-
-    @OneToMany(mappedBy = "role")
-    @JsonIgnore
-    private List<UserEntity> users;
 }

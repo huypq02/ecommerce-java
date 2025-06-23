@@ -8,5 +8,5 @@ public record RegisterRequest(
         String email,
         @NotBlank(message = "Password is required")
         String password,
-        String fullname) {
+        String role) {
 }
